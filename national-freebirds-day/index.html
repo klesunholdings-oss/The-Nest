@@ -285,25 +285,31 @@
     gap: 3px;
   }
 
-  .cake-wrap {
-    flex: none;
-    height: 115px;
-  }
+.cake-wrap {
+  flex: none;
+  height: 105px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
 
-  .cake {
-    width: 135px;
-  }
+.cake {
+  width: 115px;
+  max-height: 105px;
+  object-fit: contain;
+}
 
   .countdown-content {
     flex: none;
     width: 100%;
   }
 
-  .birthday-line {
-    margin-bottom: 3px;
-    font-size: 10px;
-    letter-spacing: 1.7px;
-  }
+.birthday-line {
+  margin: 0 0 4px;
+  font-size: 10px;
+  letter-spacing: 1.7px;
+}
 
   .headline {
     font-size: clamp(21px, 6.7vw, 31px);
