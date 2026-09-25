@@ -113,8 +113,9 @@
     }
 
     .headline .orange {
-      color: #ff651d;
-    }
+  display: block;
+  color: #ff651d;
+}
 
     .date {
       margin-top: 11px;
@@ -385,6 +386,69 @@
   }
 }
 
+    /* =========================
+   VERY NARROW MOBILE
+   ========================= */
+
+@media (max-width: 360px) {
+
+  .countdown-state {
+    padding: 10px 6px;
+    grid-template-rows: 88px 1fr;
+    gap: 7px;
+  }
+
+  .cake-wrap {
+    height: 88px;
+  }
+
+  .cake {
+    width: 82px;
+    height: 82px;
+    max-height: 82px;
+  }
+
+  .birthday-line {
+    font-size: 8px;
+    letter-spacing: 1.2px;
+    margin-bottom: 4px;
+  }
+
+  .headline {
+    font-size: clamp(17px, 8vw, 23px);
+    line-height: .93;
+    letter-spacing: -0.3px;
+  }
+
+  .date {
+    margin-top: 6px;
+    font-size: 8px;
+    letter-spacing: .8px;
+  }
+
+  .timer {
+    margin-top: 10px;
+    gap: 3px;
+  }
+
+  .unit {
+    width: calc(25% - 2px);
+    padding: 7px 1px 6px;
+    border-radius: 5px;
+    box-shadow: 1px 2px 0 #ff651d;
+  }
+
+  .number {
+    font-size: clamp(20px, 10vw, 27px);
+  }
+
+  .label {
+    margin-top: 3px;
+    font-size: 5.5px;
+    letter-spacing: 0;
+  }
+}
+    
     @media (prefers-reduced-motion: reduce) {
       .confetti {
         animation: none;
@@ -416,9 +480,9 @@
         </div>
 
         <h1 class="headline">
-          Countdown to<br>
-          <span class="orange">National Freebirds Day</span>
-        </h1>
+  Countdown to
+  <span class="orange">National Freebirds Day</span>
+</h1>
 
         <div class="date">
           October 28, 2026
