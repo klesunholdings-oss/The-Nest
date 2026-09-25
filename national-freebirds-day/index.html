@@ -277,10 +277,10 @@
 
 .post-art {
   display: block;
-  width: min(100%, 700px);
-  max-height: 150px;
+  width: min(100%, 900px);
+  max-height: 170px;
   object-fit: contain;
-  margin: 8px auto 0;
+  margin: 4px auto 0;
 }
 
   /* =========================
@@ -438,6 +438,12 @@
   .bowl {
     width: min(90%, 220px);
     max-height: 135px;
+  }
+  .post-art {
+  width: min(100%, 700px);
+  height: auto;
+  max-height: 150px;
+  margin: 8px auto 0;
   }
 }
 
@@ -630,22 +636,32 @@
   <script>
 
     /*
-      ======================================
-      NATIONAL FREEBIRDS DAY DATE SETTINGS
-      ======================================
 
-      Start:
-      October 28, 2026 at 12:00 AM CDT
+  ======================================
 
-      End:
-      October 29, 2026 at 12:00 AM CDT
-    */
+  NATIONAL FREEBIRDS DAY DATE SETTINGS
+
+  ======================================
+
+  Countdown ends:
+
+  October 28, 2026 at 12:00 AM CDT
+
+  Celebration state:
+
+  October 28 through October 31
+
+  Post-event state begins:
+
+  November 1, 2026 at 12:00 AM CDT
+
+*/
 
     const eventStart =
       new Date("2026-10-28T00:00:00-05:00").getTime();
 
     const eventEnd =
-      new Date("2026-10-29T00:00:00-05:00").getTime();
+  new Date("2026-11-01T00:00:00-05:00").getTime();
 
 
     const countdownState =
