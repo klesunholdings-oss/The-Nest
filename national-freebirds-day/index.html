@@ -116,6 +116,11 @@
   display: block;
   color: #ff651d;
 }
+    
+    .countdown-line {
+  display: block;
+  white-space: nowrap;
+}
 
     .date {
       margin-top: 11px;
@@ -414,12 +419,17 @@
     margin-bottom: 4px;
   }
 
-  .headline {
-    font-size: clamp(17px, 8vw, 23px);
-    line-height: .93;
-    letter-spacing: -0.3px;
-  }
+ .headline {
+  font-size: clamp(15px, 7.2vw, 21px);
+  line-height: .95;
+  letter-spacing: -0.4px;
+  white-space: normal;
+}
 
+.headline .orange {
+  display: block;
+  font-size: .95em;
+}
   .date {
     margin-top: 6px;
     font-size: 8px;
@@ -480,10 +490,9 @@
         </div>
 
         <h1 class="headline">
-  Countdown to
+  <span class="countdown-line">Countdown to</span>
   <span class="orange">National Freebirds Day</span>
 </h1>
-
         <div class="date">
           October 28, 2026
         </div>
