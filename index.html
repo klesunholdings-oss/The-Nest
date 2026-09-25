@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Nest Test</title>
+</head>
+
+<body style="
+  margin:0;
+  padding:30px;
+  background:#111;
+  color:white;
+  text-align:center;
+  font-family:Arial,sans-serif;
+">
+
+  <div style="font-size:18px;font-weight:bold;margin-bottom:10px;">
+    THE NEST EXTERNAL TEST
+  </div>
+
+  <div id="result" style="
+    font-size:32px;
+    font-weight:bold;
+    color:#7CFC00;
+  ">
+    Loading...
+  </div>
+
+  <script>
+    let count = 0;
+
+    function update() {
+      count++;
+      document.getElementById("result").textContent =
+        "JavaScript running: " + count;
+    }
+
+    update();
+    setInterval(update, 1000);
+  </script>
+
+</body>
+</html>
