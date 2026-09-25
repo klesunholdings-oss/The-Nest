@@ -246,33 +246,42 @@
        ========================= */
 
     .post-state {
-      position: relative;
-      z-index: 1;
-      min-height: 250px;
-      padding: 45px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
+  position: relative;
+  z-index: 1;
+  height: 340px;
+  padding: 18px 20px 10px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: center;
+}
 
-    .post-inner {
-      max-width: 750px;
-    }
+.post-inner {
+  width: 100%;
+  max-width: 900px;
+}
 
-    .post-inner h1 {
-      margin: 0;
-      font-size: clamp(30px, 5vw, 58px);
-      line-height: 1;
-      font-weight: 900;
-      text-transform: uppercase;
-    }
+.post-inner h1 {
+  margin: 0;
+  font-size: clamp(30px, 5vw, 58px);
+  line-height: 1;
+  font-weight: 900;
+  text-transform: uppercase;
+}
 
-    .post-inner p {
-      margin: 14px 0 0;
-      font-size: 17px;
-      font-weight: 700;
-    }
+.post-inner p {
+  margin: 12px 0 0;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.post-art {
+  display: block;
+  width: min(100%, 700px);
+  max-height: 150px;
+  object-fit: contain;
+  margin: 8px auto 0;
+}
 
   /* =========================
    MOBILE
@@ -596,15 +605,24 @@
     </section>
 
 
-    <!-- AFTER OCTOBER 28 -->
-    <section class="state post-state hidden" id="postState">
+   <!-- AFTER OCTOBER 28 -->
+<section class="state post-state hidden" id="postState">
 
-      <div class="post-inner">
-        <h1>Thanks for Celebrating With Us!</h1>
-        <p>39 years of Freebirds World Burrito.</p>
-      </div>
+  <div class="post-inner">
 
-    </section>
+    <h1>Thanks for<br>Celebrating With Us!</h1>
+
+    <p>39 years of Freebirds World Burrito.</p>
+
+    <img
+      class="post-art"
+      id="postArt"
+      data-src="assets/Post_NFD.gif"
+      alt="Freebirds birthday celebration characters">
+
+  </div>
+
+</section>
 
   </main>
 
