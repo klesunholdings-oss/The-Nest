@@ -587,7 +587,8 @@
 
         <img
           class="bowl"
-          src="assets/Bowl_Candle3.gif"
+          id="birthdayBowl"
+          data-src="assets/Bowl_Candle3.gif"
           alt="Freebirds birthday bowl with candle">
 
       </div>
@@ -704,12 +705,13 @@
 
       if (now >= eventStart && now < eventEnd) {
 
-        showState(celebrationState);
+  showState(celebrationState);
 
-        createConfetti();
+  loadBirthdayBowl();
+  createConfetti();
 
-        return;
-      }
+  return;
+}
 
 
       /*
@@ -719,6 +721,19 @@
       showState(postState);
     }
 
+    let bowlLoaded = false;
+
+function loadBirthdayBowl() {
+
+  if (bowlLoaded) return;
+
+  const bowl = document.getElementById("birthdayBowl");
+
+  if (!bowl) return;
+
+  bowl.src = bowl.dataset.src;
+  bowlLoaded = true;
+}
 
     let confettiCreated = false;
 
