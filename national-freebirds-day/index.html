@@ -733,10 +733,11 @@
 
 
       /*
-        AFTER OCTOBER 28
-      */
+  AFTER OCTOBER 28
+*/
 
-      showState(postState);
+showState(postState);
+loadPostArt();
     }
 
     let bowlLoaded = false;
@@ -751,6 +752,20 @@ function loadBirthdayBowl() {
 
   bowl.src = bowl.dataset.src;
   bowlLoaded = true;
+}
+   
+    let postArtLoaded = false;
+
+function loadPostArt() {
+
+  if (postArtLoaded) return;
+
+  const postArt = document.getElementById("postArt");
+
+  if (!postArt) return;
+
+  postArt.src = postArt.dataset.src;
+  postArtLoaded = true;
 }
 
     let confettiCreated = false;
@@ -804,6 +819,7 @@ function loadBirthdayBowl() {
 // PREVIEW POST-EVENT STATE
 
 showState(postState);
+loadPostArt();
 
   </script>
 
