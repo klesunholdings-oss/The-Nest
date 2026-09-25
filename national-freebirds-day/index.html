@@ -582,7 +582,7 @@
     </section>
 
 
-    <!-- OCTOBER 28 -->
+    <!-- OCTOBER 28 - OCTOBER 31 -->
     <section class="state celebration-state hidden" id="celebrationState">
 
       <div class="happy-wrap">
@@ -611,7 +611,7 @@
     </section>
 
 
-   <!-- AFTER OCTOBER 28 -->
+   <!-- NOVEMBER 1 AND AFTER -->
 <section class="state post-state hidden" id="postState">
 
   <div class="post-inner">
@@ -832,10 +832,9 @@ function loadPostArt() {
     }
 
 
-// PREVIEW POST-EVENT STATE
-
-showState(postState);
-loadPostArt();
+// INITIALIZE
+update();
+setInterval(update, 1000);
 
   </script>
 
