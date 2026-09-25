@@ -3,11 +3,216 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>National Freebirds Day Countdown</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      background: transparent;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .countdown {
+      width: 100%;
+      padding: 32px 20px;
+      text-align: center;
+      background: #111111;
+      color: #ffffff;
+    }
+
+    .eyebrow {
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(24px, 5vw, 44px);
+      line-height: 1.05;
+    }
+
+    .date {
+      margin-top: 8px;
+      font-size: 16px;
+      opacity: 0.75;
+    }
+
+    .timer {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+
+    .unit {
+      min-width: 110px;
+      padding: 16px 18px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .number {
+      display: block;
+      font-size: clamp(32px, 7vw, 54px);
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .label {
+      display: block;
+      margin-top: 7px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      opacity: 0.65;
+    }
+
+    #celebration {
+      display: none;
+      margin-top: 26px;
+      font-size: clamp(24px, 5vw, 42px);
+      font-weight: 800;
+    }
+
+    @media (max-width: 520px) {
+      .countdown {
+        padding: 24px 12px;
+      }
+
+      .timer {
+        gap: 8px;
+      }
+
+      .unit {
+        min-width: calc(50% - 8px);
+      }
+    }
+  </style>
 </head>
 
 <body>
-  <h1>National Freebirds Day Countdown</h1>
-  <p>October 28, 2026</p>
+
+  <main class="countdown">
+
+    <div class="eyebrow">
+      39 Years of Freebirds
+    </div>
+
+    <h1>
+      Countdown to National Freebirds Day
+    </h1>
+
+    <div class="date">
+      October 28, 2026
+    </div>
+
+    <div class="timer" id="timer">
+
+      <div class="unit">
+        <span class="number" id="days">--</span>
+        <span class="label">DAYS</span>
+      </div>
+
+      <div class="unit">
+        <span class="number" id="hours">--</span>
+        <span class="label">HOURS</span>
+      </div>
+
+      <div class="unit">
+        <span class="number" id="minutes">--</span>
+        <span class="label">MINUTES</span>
+      </div>
+
+      <div class="unit">
+        <span class="number" id="seconds">--</span>
+        <span class="label">SECONDS</span>
+      </div>
+
+    </div>
+
+    <div id="celebration">
+      TODAY IS NATIONAL FREEBIRDS DAY!
+    </div>
+
+  </main>
+
+  <script>
+
+    /*
+      National Freebirds Day
+      October 28, 2026
+      Midnight Central Daylight Time
+    */
+
+    const target =
+      new Date("2026-10-28T00:00:00-05:00").getTime();
+
+    const day =
+      1000 * 60 * 60 * 24;
+
+    const hour =
+      1000 * 60 * 60;
+
+    const minute =
+      1000 * 60;
+
+    function updateCountdown() {
+
+      const now = Date.now();
+      const remaining = target - now;
+
+      if (remaining <= 0) {
+
+        document.getElementById("timer").style.display = "none";
+
+        document.getElementById("celebration").style.display = "block";
+
+        return;
+      }
+
+      const days =
+        Math.floor(remaining / day);
+
+      const hours =
+        Math.floor((remaining % day) / hour);
+
+      const minutes =
+        Math.floor((remaining % hour) / minute);
+
+      const seconds =
+        Math.floor((remaining % minute) / 1000);
+
+      document.getElementById("days").textContent =
+        days;
+
+      document.getElementById("hours").textContent =
+        String(hours).padStart(2, "0");
+
+      document.getElementById("minutes").textContent =
+        String(minutes).padStart(2, "0");
+
+      document.getElementById("seconds").textContent =
+        String(seconds).padStart(2, "0");
+    }
+
+    updateCountdown();
+
+    setInterval(updateCountdown, 1000);
+
+  </script>
+
 </body>
 </html>
