@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>National Freebirds Day Countdown</title>
+  <title>National Freebirds Day</title>
 
   <style>
     * {
@@ -20,197 +19,607 @@
       font-family: Arial, Helvetica, sans-serif;
     }
 
-    .countdown {
-      width: 100%;
-      padding: 32px 20px;
-      text-align: center;
-      background: #111111;
-      color: #ffffff;
+    body {
+      overflow-x: hidden;
     }
 
-    .eyebrow {
-      margin-bottom: 8px;
-      font-size: 14px;
-      font-weight: 700;
+    /* =========================
+       SHARED
+       ========================= */
+
+    .nfd {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      background: #83c9d7;
+      color: #292929;
+    }
+
+    .state {
+      width: 100%;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Decorative texture */
+    .nfd::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: .12;
+      background-image:
+        radial-gradient(circle at 20% 30%, #ffffff 0 2px, transparent 3px),
+        radial-gradient(circle at 75% 70%, #ffffff 0 2px, transparent 3px),
+        radial-gradient(circle at 55% 15%, #ffffff 0 1px, transparent 2px);
+      background-size: 90px 90px, 120px 120px, 70px 70px;
+    }
+
+    /* =========================
+       COUNTDOWN STATE
+       ========================= */
+
+    .countdown-state {
+      position: relative;
+      z-index: 1;
+      min-height: 330px;
+      padding: 28px 5%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(25px, 5vw, 80px);
+    }
+
+    .cake-wrap {
+      flex: 0 1 350px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .cake {
+      display: block;
+      width: min(100%, 310px);
+      height: auto;
+      filter: drop-shadow(0 10px 8px rgba(0,0,0,.15));
+      transform: rotate(-2deg);
+    }
+
+    .countdown-content {
+      flex: 1 1 650px;
+      max-width: 760px;
+      text-align: center;
+    }
+
+    .birthday-line {
+      margin-bottom: 7px;
+      font-size: clamp(14px, 1.7vw, 19px);
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .headline {
+      margin: 0;
+      font-size: clamp(31px, 4.3vw, 58px);
+      line-height: .98;
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      text-transform: uppercase;
+    }
+
+    .headline .orange {
+      color: #ff651d;
+    }
+
+    .date {
+      margin-top: 11px;
+      font-size: clamp(15px, 1.6vw, 19px);
+      font-weight: 800;
       letter-spacing: 2px;
       text-transform: uppercase;
     }
 
-    h1 {
-      margin: 0;
-      font-size: clamp(24px, 5vw, 44px);
-      line-height: 1.05;
-    }
-
-    .date {
-      margin-top: 8px;
-      font-size: 16px;
-      opacity: 0.75;
-    }
-
     .timer {
+      margin-top: 24px;
       display: flex;
       justify-content: center;
-      gap: 12px;
-      margin-top: 28px;
-      flex-wrap: wrap;
+      gap: clamp(7px, 1vw, 14px);
     }
 
     .unit {
-      min-width: 110px;
-      padding: 16px 18px;
-      border: 1px solid rgba(255,255,255,0.18);
+      width: clamp(92px, 10vw, 135px);
+      padding: 15px 8px 12px;
+      background: #292929;
+      color: white;
       border-radius: 10px;
-      background: rgba(255,255,255,0.06);
+      box-shadow: 4px 5px 0 #ff651d;
     }
 
     .number {
       display: block;
-      font-size: clamp(32px, 7vw, 54px);
-      font-weight: 800;
+      font-size: clamp(34px, 4.5vw, 57px);
       line-height: 1;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
     }
 
     .label {
       display: block;
       margin-top: 7px;
-      font-size: 11px;
-      font-weight: 700;
+      font-size: clamp(9px, .9vw, 11px);
+      font-weight: 900;
       letter-spacing: 1.5px;
-      opacity: 0.65;
+      opacity: .78;
     }
 
-    #celebration {
-      display: none;
-      margin-top: 26px;
-      font-size: clamp(24px, 5vw, 42px);
-      font-weight: 800;
+    /* =========================
+       NATIONAL FREEBIRDS DAY
+       ========================= */
+
+    .celebration-state {
+      position: relative;
+      z-index: 1;
+      min-height: 390px;
+      padding: 22px 5%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(25px, 5vw, 70px);
     }
 
-    @media (max-width: 520px) {
-      .countdown {
-        padding: 24px 12px;
+    .happy-wrap {
+      flex: 0 1 510px;
+      text-align: center;
+    }
+
+    .happy-art {
+      display: block;
+      width: min(100%, 500px);
+      height: auto;
+      margin: 0 auto;
+      filter: drop-shadow(0 8px 5px rgba(0,0,0,.10));
+    }
+
+    .celebrating {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 8px 16px;
+      background: #292929;
+      color: white;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transform: rotate(-1deg);
+    }
+
+    .bowl-wrap {
+      flex: 0 1 520px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .bowl {
+      display: block;
+      width: min(100%, 500px);
+      height: auto;
+      filter: drop-shadow(0 12px 10px rgba(0,0,0,.18));
+    }
+
+    /* =========================
+       CONFETTI
+       ========================= */
+
+    .confetti {
+      position: absolute;
+      z-index: 0;
+      top: -20px;
+      width: 9px;
+      height: 18px;
+      opacity: .75;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      from {
+        transform: translateY(-30px) rotate(0deg);
       }
+      to {
+        transform: translateY(500px) rotate(540deg);
+      }
+    }
 
-      .timer {
+    /* =========================
+       POST EVENT
+       ========================= */
+
+    .post-state {
+      position: relative;
+      z-index: 1;
+      min-height: 250px;
+      padding: 45px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .post-inner {
+      max-width: 750px;
+    }
+
+    .post-inner h1 {
+      margin: 0;
+      font-size: clamp(30px, 5vw, 58px);
+      line-height: 1;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .post-inner p {
+      margin: 14px 0 0;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    /* =========================
+       MOBILE
+       ========================= */
+
+    @media (max-width: 760px) {
+
+      .countdown-state {
+        min-height: 0;
+        padding: 22px 14px 27px;
+        flex-direction: column;
         gap: 8px;
       }
 
+      .cake-wrap {
+        flex: none;
+      }
+
+      .cake {
+        width: 175px;
+      }
+
+      .countdown-content {
+        flex: none;
+        width: 100%;
+      }
+
+      .birthday-line {
+        font-size: 12px;
+        letter-spacing: 2px;
+      }
+
+      .headline {
+        font-size: clamp(27px, 8vw, 42px);
+      }
+
+      .date {
+        font-size: 13px;
+      }
+
+      .timer {
+        margin-top: 18px;
+        gap: 6px;
+      }
+
       .unit {
-        min-width: calc(50% - 8px);
+        width: calc(25% - 5px);
+        min-width: 0;
+        padding: 12px 3px 10px;
+        box-shadow: 2px 3px 0 #ff651d;
+      }
+
+      .number {
+        font-size: clamp(27px, 9vw, 42px);
+      }
+
+      .label {
+        font-size: 8px;
+        letter-spacing: .6px;
+      }
+
+      .celebration-state {
+        min-height: 0;
+        padding: 22px 15px 30px;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .happy-wrap,
+      .bowl-wrap {
+        flex: none;
+        width: 100%;
+      }
+
+      .happy-art {
+        width: min(100%, 380px);
+      }
+
+      .bowl {
+        width: min(100%, 390px);
       }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      .confetti {
+        animation: none;
+        display: none;
+      }
+    }
+
   </style>
 </head>
 
 <body>
 
-  <main class="countdown">
+  <main class="nfd" id="nfd">
 
-    <div class="eyebrow">
-      39 Years of Freebirds
-    </div>
+    <!-- COUNTDOWN -->
+    <section class="state countdown-state" id="countdownState">
 
-    <h1>
-      Countdown to National Freebirds Day
-    </h1>
-
-    <div class="date">
-      October 28, 2026
-    </div>
-
-    <div class="timer" id="timer">
-
-      <div class="unit">
-        <span class="number" id="days">--</span>
-        <span class="label">DAYS</span>
+      <div class="cake-wrap">
+        <img
+          class="cake"
+          src="assets/Cake_Sticker.png"
+          alt="Freebirds 39th birthday cake">
       </div>
 
-      <div class="unit">
-        <span class="number" id="hours">--</span>
-        <span class="label">HOURS</span>
+      <div class="countdown-content">
+
+        <div class="birthday-line">
+          Celebrating 39 Years
+        </div>
+
+        <h1 class="headline">
+          Countdown to<br>
+          <span class="orange">National Freebirds Day</span>
+        </h1>
+
+        <div class="date">
+          October 28, 2026
+        </div>
+
+        <div class="timer">
+
+          <div class="unit">
+            <span class="number" id="days">--</span>
+            <span class="label">DAYS</span>
+          </div>
+
+          <div class="unit">
+            <span class="number" id="hours">--</span>
+            <span class="label">HOURS</span>
+          </div>
+
+          <div class="unit">
+            <span class="number" id="minutes">--</span>
+            <span class="label">MINUTES</span>
+          </div>
+
+          <div class="unit">
+            <span class="number" id="seconds">--</span>
+            <span class="label">SECONDS</span>
+          </div>
+
+        </div>
+
       </div>
 
-      <div class="unit">
-        <span class="number" id="minutes">--</span>
-        <span class="label">MINUTES</span>
+    </section>
+
+
+    <!-- OCTOBER 28 -->
+    <section class="state celebration-state hidden" id="celebrationState">
+
+      <div class="happy-wrap">
+
+        <img
+          class="happy-art"
+          src="assets/Happy_NFD.png"
+          alt="Happy National Freebirds Day">
+
+        <div class="celebrating">
+          Celebrating 39 Years
+        </div>
+
       </div>
 
-      <div class="unit">
-        <span class="number" id="seconds">--</span>
-        <span class="label">SECONDS</span>
+      <div class="bowl-wrap">
+
+        <img
+          class="bowl"
+          src="assets/Bowl_Candle.png"
+          alt="Freebirds birthday bowl with candle">
+
       </div>
 
-    </div>
+    </section>
 
-    <div id="celebration">
-      TODAY IS NATIONAL FREEBIRDS DAY!
-    </div>
+
+    <!-- AFTER OCTOBER 28 -->
+    <section class="state post-state hidden" id="postState">
+
+      <div class="post-inner">
+        <h1>Thanks for Celebrating With Us!</h1>
+        <p>39 years of Freebirds World Burrito.</p>
+      </div>
+
+    </section>
 
   </main>
+
 
   <script>
 
     /*
-      National Freebirds Day
-      October 28, 2026
-      Midnight Central Daylight Time
+      ======================================
+      NATIONAL FREEBIRDS DAY DATE SETTINGS
+      ======================================
+
+      Start:
+      October 28, 2026 at 12:00 AM CDT
+
+      End:
+      October 29, 2026 at 12:00 AM CDT
     */
 
-    const target =
+    const eventStart =
       new Date("2026-10-28T00:00:00-05:00").getTime();
 
-    const day =
-      1000 * 60 * 60 * 24;
+    const eventEnd =
+      new Date("2026-10-29T00:00:00-05:00").getTime();
 
-    const hour =
-      1000 * 60 * 60;
 
-    const minute =
-      1000 * 60;
+    const countdownState =
+      document.getElementById("countdownState");
 
-    function updateCountdown() {
+    const celebrationState =
+      document.getElementById("celebrationState");
+
+    const postState =
+      document.getElementById("postState");
+
+
+    const DAY = 86400000;
+    const HOUR = 3600000;
+    const MINUTE = 60000;
+
+
+    function showState(state) {
+
+      countdownState.classList.add("hidden");
+      celebrationState.classList.add("hidden");
+      postState.classList.add("hidden");
+
+      state.classList.remove("hidden");
+    }
+
+
+    function update() {
 
       const now = Date.now();
-      const remaining = target - now;
 
-      if (remaining <= 0) {
+      /*
+        BEFORE OCTOBER 28
+      */
 
-        document.getElementById("timer").style.display = "none";
+      if (now < eventStart) {
 
-        document.getElementById("celebration").style.display = "block";
+        showState(countdownState);
+
+        const remaining =
+          eventStart - now;
+
+        const days =
+          Math.floor(remaining / DAY);
+
+        const hours =
+          Math.floor((remaining % DAY) / HOUR);
+
+        const minutes =
+          Math.floor((remaining % HOUR) / MINUTE);
+
+        const seconds =
+          Math.floor((remaining % MINUTE) / 1000);
+
+
+        document.getElementById("days").textContent =
+          days;
+
+        document.getElementById("hours").textContent =
+          String(hours).padStart(2, "0");
+
+        document.getElementById("minutes").textContent =
+          String(minutes).padStart(2, "0");
+
+        document.getElementById("seconds").textContent =
+          String(seconds).padStart(2, "0");
 
         return;
       }
 
-      const days =
-        Math.floor(remaining / day);
 
-      const hours =
-        Math.floor((remaining % day) / hour);
+      /*
+        OCTOBER 28
+      */
 
-      const minutes =
-        Math.floor((remaining % hour) / minute);
+      if (now >= eventStart && now < eventEnd) {
 
-      const seconds =
-        Math.floor((remaining % minute) / 1000);
+        showState(celebrationState);
 
-      document.getElementById("days").textContent =
-        days;
+        createConfetti();
 
-      document.getElementById("hours").textContent =
-        String(hours).padStart(2, "0");
+        return;
+      }
 
-      document.getElementById("minutes").textContent =
-        String(minutes).padStart(2, "0");
 
-      document.getElementById("seconds").textContent =
-        String(seconds).padStart(2, "0");
+      /*
+        AFTER OCTOBER 28
+      */
+
+      showState(postState);
     }
 
-    updateCountdown();
 
-    setInterval(updateCountdown, 1000);
+    let confettiCreated = false;
+
+    function createConfetti() {
+
+      if (confettiCreated) return;
+
+      confettiCreated = true;
+
+      const container =
+        document.getElementById("nfd");
+
+      const colors = [
+        "#ff651d",
+        "#292929",
+        "#ffffff",
+        "#f47db3",
+        "#4caa72"
+      ];
+
+      for (let i = 0; i < 32; i++) {
+
+        const piece =
+          document.createElement("span");
+
+        piece.className =
+          "confetti";
+
+        piece.style.left =
+          Math.random() * 100 + "%";
+
+        piece.style.background =
+          colors[
+            Math.floor(
+              Math.random() * colors.length
+            )
+          ];
+
+        piece.style.animationDuration =
+          (4 + Math.random() * 4) + "s";
+
+        piece.style.animationDelay =
+          (-Math.random() * 8) + "s";
+
+        container.appendChild(piece);
+      }
+    }
+
+
+    update();
+
+    setInterval(update, 1000);
 
   </script>
 
