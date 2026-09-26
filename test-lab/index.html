@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wisetail Test Lab</title>
+  <title>Embedded App Test Lab</title>
 
   <style>
     * {
@@ -36,15 +36,6 @@
     .subtitle {
       margin: 0 0 20px;
       color: #666;
-    }
-
-    .notice {
-      margin-bottom: 18px;
-      padding: 12px 14px;
-      background: #fff8dc;
-      border-radius: 8px;
-      font-size: 13px;
-      line-height: 1.45;
     }
 
     .grid {
@@ -198,16 +189,11 @@
 
 <div class="lab">
 
-  <h1>Wisetail Test Lab</h1>
+  <h1>Embedded App Test Lab</h1>
 
   <p class="subtitle">
     Embedded web application capability diagnostics
   </p>
-
-  <div class="notice">
-    This page uses synthetic test data only. Network tests do not send
-    employee, restaurant, Wisetail, or Freebirds operational information.
-  </div>
 
   <div class="grid">
 
@@ -224,11 +210,6 @@
       <div class="result">
         <span>Parent detected</span>
         <span class="value" id="parentResult">Testing...</span>
-      </div>
-
-      <div class="result">
-        <span>Referrer</span>
-        <span class="value" id="referrerResult">Testing...</span>
       </div>
 
       <div class="result">
@@ -438,7 +419,7 @@
 
       <p class="small">
         SENT only proves the browser accepted our outbound message.
-        A response requires Wisetail to have compatible parent-side code.
+        A response requires the embedded app to have compatible parent-side code.
       </p>
     </section>
 
@@ -597,7 +578,7 @@
       </button>
 
       <p class="small">
-        If Wisetail blocks clipboard access, Copy Full Report will fall back
+        If the embedded app blocks clipboard access, Copy Full Report will fall back
         to a manual copy dialog.
       </p>
 
@@ -703,15 +684,6 @@
         : "unknown"
     );
 
-    const referrer =
-      document.referrer;
-
-    setResult(
-      "referrerResult",
-      referrer || "NONE",
-      referrer ? "info" : "unknown"
-    );
-
     setResult(
       "touchResult",
       String(navigator.maxTouchPoints),
@@ -740,14 +712,6 @@
       "Iframe detected: " +
       inIframe
     );
-
-    if (referrer) {
-      log(
-        "Referrer: " +
-        referrer
-      );
-    }
-  }
 
 
   function updateViewport() {
@@ -833,13 +797,13 @@
     try {
 
       localStorage.setItem(
-        "wisetailLabTest",
+        "EmbeddedAppLabTest",
         "working"
       );
 
       const value =
         localStorage.getItem(
-          "wisetailLabTest"
+          "EmbeddedAppLabTest"
         );
 
       const passed =
@@ -874,13 +838,13 @@
     try {
 
       sessionStorage.setItem(
-        "wisetailSessionTest",
+        "EmbeddedAppSessionTest",
         "working"
       );
 
       const value =
         sessionStorage.getItem(
-          "wisetailSessionTest"
+          "EmbeddedAppSessionTest"
         );
 
       const passed =
@@ -917,14 +881,14 @@
       let visits =
         Number(
           localStorage.getItem(
-            "wisetailLabVisits"
+            "EmbeddedAppLabVisits"
           ) || 0
         );
 
       visits++;
 
       localStorage.setItem(
-        "wisetailLabVisits",
+        "EmbeddedAppLabVisits",
         visits
       );
 
@@ -953,7 +917,7 @@
 
       const saved =
         localStorage.getItem(
-          "wisetailPersistentValue"
+          "EmbeddedAppPersistentValue"
         );
 
       setResult(
@@ -982,7 +946,7 @@
     try {
 
       localStorage.setItem(
-        "wisetailPersistentValue",
+        "EmbeddedAppPersistentValue",
         value
       );
 
@@ -1023,7 +987,7 @@
 
       const value =
         localStorage.getItem(
-          "wisetailPersistentValue"
+          "EmbeddedAppPersistentValue"
         );
 
       if (value) {
@@ -1076,23 +1040,23 @@
     try {
 
       localStorage.removeItem(
-        "wisetailLabTest"
+        "EmbeddedAppLabTest"
       );
 
       localStorage.removeItem(
-        "wisetailLabVisits"
+        "EmbeddedAppLabVisits"
       );
 
       localStorage.removeItem(
-        "wisetailManualTest"
+        "EmbeddedAppManualTest"
       );
 
       localStorage.removeItem(
-        "wisetailPersistentValue"
+        "EmbeddedAppPersistentValue"
       );
 
       sessionStorage.removeItem(
-        "wisetailSessionTest"
+        "EmbeddedAppSessionTest"
       );
 
       setResult(
@@ -1223,7 +1187,7 @@
     try {
 
       await navigator.clipboard.writeText(
-        "Wisetail Test Lab clipboard test"
+        "Embedded App Test Lab clipboard test"
       );
 
       setResult(
@@ -1315,7 +1279,7 @@
       const blob =
         new Blob(
           [
-            "Wisetail Test Lab\n" +
+            "Embedded App Test Lab\n" +
             "Synthetic download test\n" +
             new Date().toISOString()
           ],
@@ -1333,7 +1297,7 @@
       link.href = url;
 
       link.download =
-        "wisetail-test-lab.txt";
+        "embedded-app-test-lab.txt";
 
       document.body.appendChild(link);
 
@@ -1502,7 +1466,7 @@
       window.parent.postMessage(
         {
           source:
-            "wisetail-test-lab",
+            "embedded-app-test-lab",
 
           type:
             "CAPABILITY_TEST",
@@ -1687,7 +1651,7 @@
 
       const payload = {
         test:
-          "wisetail-capability-lab",
+          "embedded-app-capability-lab",
 
         synthetic:
           true,
@@ -1730,7 +1694,7 @@
       const passed =
         data &&
         data.test ===
-          "wisetail-capability-lab";
+          "embedded-app-capability-lab";
 
       setResult(
         "postResult",
@@ -2001,7 +1965,7 @@
   function buildReport() {
 
     return `
-WISETAIL TEST LAB
+EMBEDDED APP TEST LAB
 =================
 
 Timestamp:
@@ -2009,9 +1973,6 @@ ${new Date().toISOString()}
 
 URL:
 ${location.href}
-
-Referrer:
-${document.referrer || "None"}
 
 ENVIRONMENT
 -----------
@@ -2029,7 +1990,7 @@ sessionStorage: ${cleanText("sessionStorageResult")}
 Visit count: ${cleanText("visitResult")}
 Saved value status: ${cleanText("savedValueStatus")}
 Saved value:
-${localStorage.getItem("wisetailPersistentValue") || "None"}
+${localStorage.getItem("EmbeddedAppPersistentValue") || "None"}
 
 INTERACTION
 -----------
@@ -2143,7 +2104,7 @@ ${events.join("\n")}
      ====================================== */
 
   log(
-    "Wisetail Test Lab initialized"
+    "Embedded App Test Lab initialized"
   );
 
   testEnvironment();
