@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wisetail Capability Lab</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f5f7;
+      color: #242424;
+    }
+
+    body {
+      padding: 20px;
+    }
+
+    .lab {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 30px;
+    }
+
+    .subtitle {
+      margin: 0 0 22px;
+      color: #666;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+
+    .card h2 {
+      margin: 0 0 14px;
+      font-size: 18px;
+    }
+
+    .result {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 7px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .result:last-child {
+      border-bottom: 0;
+    }
+
+    .value {
+      text-align: right;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .pass {
+      color: #16803c;
+    }
+
+    .fail {
+      color: #b42318;
+    }
+
+    .unknown {
+      color: #946200;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: 0;
+      border-radius: 7px;
+      padding: 10px 14px;
+      background: #292929;
+      color: white;
+      font-weight: 700;
+      margin: 4px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      margin: 5px 0 10px;
+      padding: 9px;
+      border: 1px solid #bbb;
+      border-radius: 6px;
+    }
+
+    .log {
+      height: 220px;
+      overflow-y: auto;
+      background: #171717;
+      color: #eee;
+      border-radius: 7px;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 700px) {
+      body {
+        padding: 10px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .full {
+        grid-column: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="lab">
+
+  <h1>Wisetail Capability Lab</h1>
+
+  <p class="subtitle">
+    Browser and iframe capability diagnostics
+  </p>
+
+  <div class="grid">
+
+    <!-- ENVIRONMENT -->
+
+    <section class="card">
+      <h2>Environment</h2>
+
+      <div class="result">
+        <span>Inside iframe</span>
+        <span class="value" id="iframeResult">Testing...</span>
+      </div>
+
+      <div class="result">
+        <span>Referrer available</span>
+        <span class="value" id="referrerResult">Testing...</span>
+      </div>
+
+      <div class="result">
+        <span>Viewport</span>
+        <span class="value" id="viewportResult">Testing...</span>
+      </div>
+
+      <div class="result">
+        <span>Touch support</span>
+        <span class="value" id="touchResult">Testing...</span>
+      </div>
+
+      <div class="result">
+        <span>Online</span>
+        <span class="value" id="onlineResult">Testing...</span>
+      </div>
+    </section>
+
+
+    <!-- STORAGE -->
+
+    <section class="card">
+      <h2>Storage</h2>
+
+      <div class="result">
+        <span>localStorage</span>
+        <span class="value" id="localStorageResult">Testing...</span>
+      </div>
+
+      <div class="result">
+        <span>sessionStorage</span>
+        <span class="value" id="sessionStorageResult">Testing...</span>
+      </div>
+
+      <div class="result">
+        <span>Persistent visits</span>
+        <span class="value" id="visitResult">Testing...</span>
+      </div>
+
+      <button onclick="testStorageWrite()">
+        Write Test Value
+      </button>
+
+      <button onclick="clearLabStorage()">
+        Clear Test Storage
+      </button>
+    </section>
+
+
+    <!-- INTERACTION -->
+
+    <section class="card">
+      <h2>Interaction</h2>
+
+      <label>
+        Test text input
+        <input
+          id="testInput"
+          type="text"
+          placeholder="Type something">
+      </label>
+
+      <label>
+        Test selection
+        <select id="testSelect">
+          <option value="">Choose...</option>
+          <option>Option A</option>
+          <option>Option B</option>
+          <option>Option C</option>
+        </select>
+      </label>
+
+      <button onclick="testInteraction()">
+        Submit Interaction
+      </button>
+
+      <div class="result">
+        <span>Form interaction</span>
+        <span class="value" id="interactionResult">
+          Not tested
+        </span>
+      </div>
+    </section>
+
+
+    <!-- BROWSER FEATURES -->
+
+    <section class="card">
+      <h2>Browser / Iframe Features</h2>
+
+      <button onclick="testClipboard()">
+        Test Clipboard
+      </button>
+
+      <button onclick="testFullscreen()">
+        Test Fullscreen
+      </button>
+
+      <button onclick="testDownload()">
+        Test Download
+      </button>
+
+      <div class="result">
+        <span>Clipboard</span>
+        <span class="value" id="clipboardResult">
+          Not tested
+        </span>
+      </div>
+
+      <div class="result">
+        <span>Fullscreen</span>
+        <span class="value" id="fullscreenResult">
+          Not tested
+        </span>
+      </div>
+
+      <div class="result">
+        <span>Download</span>
+        <span class="value" id="downloadResult">
+          Not tested
+        </span>
+      </div>
+    </section>
+
+
+    <!-- PARENT COMMUNICATION -->
+
+    <section class="card">
+      <h2>Parent Communication</h2>
+
+      <div class="result">
+        <span>Parent window detected</span>
+        <span class="value" id="parentResult">
+          Testing...
+        </span>
+      </div>
+
+      <div class="result">
+        <span>postMessage sent</span>
+        <span class="value" id="messageSentResult">
+          Not tested
+        </span>
+      </div>
+
+      <div class="result">
+        <span>Parent response</span>
+        <span class="value" id="messageResponseResult">
+          None
+        </span>
+      </div>
+
+      <button onclick="testParentMessage()">
+        Test postMessage
+      </button>
+    </section>
+
+
+    <!-- PAGE BEHAVIOR -->
+
+    <section class="card">
+      <h2>Page Behavior</h2>
+
+      <div class="result">
+        <span>Page visibility</span>
+        <span class="value" id="visibilityResult">
+          Testing...
+        </span>
+      </div>
+
+      <div class="result">
+        <span>Window width</span>
+        <span class="value" id="widthResult">
+          Testing...
+        </span>
+      </div>
+
+      <button onclick="testNewWindow()">
+        Test New Window
+      </button>
+
+      <div class="result">
+        <span>New window</span>
+        <span class="value" id="windowResult">
+          Not tested
+        </span>
+      </div>
+    </section>
+
+
+    <!-- EVENT LOG -->
+
+    <section class="card full">
+
+      <h2>Event Log</h2>
+
+      <div class="log" id="eventLog"></div>
+
+      <button onclick="copyReport()">
+        Copy Full Report
+      </button>
+
+      <button onclick="clearLog()">
+        Clear Log
+      </button>
+
+    </section>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  const events = [];
+
+  function timestamp() {
+    return new Date().toLocaleTimeString();
+  }
+
+  function log(message) {
+
+    const entry =
+      timestamp() + " — " + message;
+
+    events.push(entry);
+
+    const logElement =
+      document.getElementById("eventLog");
+
+    logElement.textContent =
+      events.join("\n");
+
+    logElement.scrollTop =
+      logElement.scrollHeight;
+  }
+
+
+  function setResult(id, text, status) {
+
+    const element =
+      document.getElementById(id);
+
+    element.textContent = text;
+
+    element.classList.remove(
+      "pass",
+      "fail",
+      "unknown"
+    );
+
+    if (status) {
+      element.classList.add(status);
+    }
+  }
+
+
+  /* =========================
+     ENVIRONMENT
+     ========================= */
+
+  function testEnvironment() {
+
+    const inIframe =
+      window.self !== window.top;
+
+    setResult(
+      "iframeResult",
+      inIframe ? "YES" : "NO",
+      inIframe ? "pass" : "unknown"
+    );
+
+    log(
+      "Iframe detected: " +
+      inIframe
+    );
+
+
+    const referrer =
+      document.referrer;
+
+    setResult(
+      "referrerResult",
+      referrer ? "YES" : "NO",
+      referrer ? "pass" : "unknown"
+    );
+
+    if (referrer) {
+      log(
+        "Referrer: " +
+        referrer
+      );
+    }
+
+
+    updateViewport();
+
+
+    const touch =
+      navigator.maxTouchPoints > 0;
+
+    setResult(
+      "touchResult",
+      touch ? "YES" : "NO",
+      touch ? "pass" : "unknown"
+    );
+
+
+    setResult(
+      "onlineResult",
+      navigator.onLine
+        ? "YES"
+        : "NO",
+      navigator.onLine
+        ? "pass"
+        : "fail"
+    );
+
+
+    const hasParent =
+      window.parent !== window;
+
+    setResult(
+      "parentResult",
+      hasParent ? "YES" : "NO",
+      hasParent ? "pass" : "unknown"
+    );
+  }
+
+
+  function updateViewport() {
+
+    const dimensions =
+      window.innerWidth +
+      " × " +
+      window.innerHeight;
+
+    setResult(
+      "viewportResult",
+      dimensions,
+      "pass"
+    );
+
+    setResult(
+      "widthResult",
+      window.innerWidth + "px",
+      "pass"
+    );
+  }
+
+
+  /* =========================
+     STORAGE
+     ========================= */
+
+  function testStorage() {
+
+    try {
+
+      localStorage.setItem(
+        "wisetailLabTest",
+        "working"
+      );
+
+      const value =
+        localStorage.getItem(
+          "wisetailLabTest"
+        );
+
+      setResult(
+        "localStorageResult",
+        value === "working"
+          ? "PASS"
+          : "FAIL",
+        value === "working"
+          ? "pass"
+          : "fail"
+      );
+
+      log(
+        "localStorage test: " +
+        (value === "working"
+          ? "PASS"
+          : "FAIL")
+      );
+
+    } catch (error) {
+
+      setResult(
+        "localStorageResult",
+        "BLOCKED",
+        "fail"
+      );
+
+      log(
+        "localStorage blocked: " +
+        error.message
+      );
+    }
+
+
+    try {
+
+      sessionStorage.setItem(
+        "wisetailSessionTest",
+        "working"
+      );
+
+      const value =
+        sessionStorage.getItem(
+          "wisetailSessionTest"
+        );
+
+      setResult(
+        "sessionStorageResult",
+        value === "working"
+          ? "PASS"
+          : "FAIL",
+        value === "working"
+          ? "pass"
+          : "fail"
+      );
+
+      log(
+        "sessionStorage test: " +
+        (value === "working"
+          ? "PASS"
+          : "FAIL")
+      );
+
+    } catch (error) {
+
+      setResult(
+        "sessionStorageResult",
+        "BLOCKED",
+        "fail"
+      );
+
+      log(
+        "sessionStorage blocked: " +
+        error.message
+      );
+    }
+
+
+    try {
+
+      let visits =
+        Number(
+          localStorage.getItem(
+            "wisetailLabVisits"
+          ) || 0
+        );
+
+      visits++;
+
+      localStorage.setItem(
+        "wisetailLabVisits",
+        visits
+      );
+
+      setResult(
+        "visitResult",
+        visits,
+        "pass"
+      );
+
+      log(
+        "Persistent visit count: " +
+        visits
+      );
+
+    } catch (error) {
+
+      setResult(
+        "visitResult",
+        "Unavailable",
+        "fail"
+      );
+    }
+  }
+
+
+  function testStorageWrite() {
+
+    const value =
+      "Saved at " +
+      new Date().toISOString();
+
+    try {
+
+      localStorage.setItem(
+        "wisetailManualTest",
+        value
+      );
+
+      log(
+        "Manual storage value written"
+      );
+
+      alert(
+        "Saved. Refresh or leave this page and return to test persistence."
+      );
+
+    } catch (error) {
+
+      log(
+        "Manual storage write failed: " +
+        error.message
+      );
+    }
+  }
+
+
+  function clearLabStorage() {
+
+    localStorage.removeItem(
+      "wisetailLabTest"
+    );
+
+    localStorage.removeItem(
+      "wisetailLabVisits"
+    );
+
+    localStorage.removeItem(
+      "wisetailManualTest"
+    );
+
+    sessionStorage.removeItem(
+      "wisetailSessionTest"
+    );
+
+    log(
+      "Lab storage cleared"
+    );
+
+    setResult(
+      "visitResult",
+      "Cleared",
+      "unknown"
+    );
+  }
+
+
+  /* =========================
+     INTERACTION
+     ========================= */
+
+  function testInteraction() {
+
+    const input =
+      document.getElementById(
+        "testInput"
+      ).value;
+
+    const selection =
+      document.getElementById(
+        "testSelect"
+      ).value;
+
+    if (!input || !selection) {
+
+      setResult(
+        "interactionResult",
+        "INCOMPLETE",
+        "unknown"
+      );
+
+      log(
+        "Form validation caught incomplete input"
+      );
+
+      return;
+    }
+
+
+    setResult(
+      "interactionResult",
+      "PASS",
+      "pass"
+    );
+
+    log(
+      "Form submitted successfully"
+    );
+  }
+
+
+  /* =========================
+     CLIPBOARD
+     ========================= */
+
+  async function testClipboard() {
+
+    try {
+
+      await navigator.clipboard.writeText(
+        "Wisetail Capability Lab clipboard test"
+      );
+
+      setResult(
+        "clipboardResult",
+        "PASS",
+        "pass"
+      );
+
+      log(
+        "Clipboard write succeeded"
+      );
+
+    } catch (error) {
+
+      setResult(
+        "clipboardResult",
+        "BLOCKED",
+        "fail"
+      );
+
+      log(
+        "Clipboard blocked: " +
+        error.message
+      );
+    }
+  }
+
+
+  /* =========================
+     FULLSCREEN
+     ========================= */
+
+  async function testFullscreen() {
+
+    try {
+
+      if (!document.fullscreenEnabled) {
+        throw new Error(
+          "Fullscreen API unavailable"
+        );
+      }
+
+      await document.documentElement
+        .requestFullscreen();
+
+      setResult(
+        "fullscreenResult",
+        "PASS",
+        "pass"
+      );
+
+      log(
+        "Fullscreen request succeeded"
+      );
+
+    } catch (error) {
+
+      setResult(
+        "fullscreenResult",
+        "BLOCKED",
+        "fail"
+      );
+
+      log(
+        "Fullscreen blocked: " +
+        error.message
+      );
+    }
+  }
+
+
+  /* =========================
+     DOWNLOAD
+     ========================= */
+
+  function testDownload() {
+
+    try {
+
+      const blob =
+        new Blob(
+          ["Wisetail Capability Lab test"],
+          { type: "text/plain" }
+        );
+
+      const url =
+        URL.createObjectURL(blob);
+
+      const link =
+        document.createElement("a");
+
+      link.href = url;
+      link.download =
+        "wisetail-test.txt";
+
+      document.body.appendChild(link);
+
+      link.click();
+      link.remove();
+
+      URL.revokeObjectURL(url);
+
+      setResult(
+        "downloadResult",
+        "TRIGGERED",
+        "pass"
+      );
+
+      log(
+        "Download triggered"
+      );
+
+    } catch (error) {
+
+      setResult(
+        "downloadResult",
+        "FAILED",
+        "fail"
+      );
+
+      log(
+        "Download failed: " +
+        error.message
+      );
+    }
+  }
+
+
+  /* =========================
+     POSTMESSAGE
+     ========================= */
+
+  function testParentMessage() {
+
+    try {
+
+      window.parent.postMessage(
+        {
+          source:
+            "wisetail-capability-lab",
+
+          type:
+            "CAPABILITY_TEST",
+
+          timestamp:
+            Date.now()
+        },
+        "*"
+      );
+
+      setResult(
+        "messageSentResult",
+        "SENT",
+        "pass"
+      );
+
+      log(
+        "postMessage sent to parent"
+      );
+
+    } catch (error) {
+
+      setResult(
+        "messageSentResult",
+        "FAILED",
+        "fail"
+      );
+
+      log(
+        "postMessage failed: " +
+        error.message
+      );
+    }
+  }
+
+
+  window.addEventListener(
+    "message",
+    function(event) {
+
+      setResult(
+        "messageResponseResult",
+        "RECEIVED",
+        "pass"
+      );
+
+      log(
+        "Message received from origin: " +
+        event.origin
+      );
+    }
+  );
+
+
+  /* =========================
+     NEW WINDOW
+     ========================= */
+
+  function testNewWindow() {
+
+    const newWindow =
+      window.open(
+        "about:blank",
+        "_blank"
+      );
+
+    if (newWindow) {
+
+      setResult(
+        "windowResult",
+        "PASS",
+        "pass"
+      );
+
+      log(
+        "New window/tab allowed"
+      );
+
+      newWindow.close();
+
+    } else {
+
+      setResult(
+        "windowResult",
+        "BLOCKED",
+        "fail"
+      );
+
+      log(
+        "New window/tab blocked"
+      );
+    }
+  }
+
+
+  /* =========================
+     PAGE EVENTS
+     ========================= */
+
+  document.addEventListener(
+    "visibilitychange",
+    function() {
+
+      setResult(
+        "visibilityResult",
+        document.visibilityState,
+        "pass"
+      );
+
+      log(
+        "Visibility changed: " +
+        document.visibilityState
+      );
+    }
+  );
+
+
+  window.addEventListener(
+    "resize",
+    function() {
+
+      updateViewport();
+
+      log(
+        "Viewport resized to " +
+        window.innerWidth +
+        " × " +
+        window.innerHeight
+      );
+    }
+  );
+
+
+  window.addEventListener(
+    "online",
+    function() {
+
+      setResult(
+        "onlineResult",
+        "YES",
+        "pass"
+      );
+
+      log(
+        "Browser came online"
+      );
+    }
+  );
+
+
+  window.addEventListener(
+    "offline",
+    function() {
+
+      setResult(
+        "onlineResult",
+        "NO",
+        "fail"
+      );
+
+      log(
+        "Browser went offline"
+      );
+    }
+  );
+
+
+  /* =========================
+     REPORT
+     ========================= */
+
+  async function copyReport() {
+
+    const report =
+`
+WISETAIL CAPABILITY LAB
+=======================
+
+Timestamp:
+${new Date().toISOString()}
+
+URL:
+${location.href}
+
+Referrer:
+${document.referrer || "None"}
+
+Inside iframe:
+${window.self !== window.top}
+
+Viewport:
+${window.innerWidth} × ${window.innerHeight}
+
+Touch points:
+${navigator.maxTouchPoints}
+
+Online:
+${navigator.onLine}
+
+localStorage:
+${document.getElementById("localStorageResult").textContent}
+
+sessionStorage:
+${document.getElementById("sessionStorageResult").textContent}
+
+Visit count:
+${document.getElementById("visitResult").textContent}
+
+Form interaction:
+${document.getElementById("interactionResult").textContent}
+
+Clipboard:
+${document.getElementById("clipboardResult").textContent}
+
+Fullscreen:
+${document.getElementById("fullscreenResult").textContent}
+
+Download:
+${document.getElementById("downloadResult").textContent}
+
+Parent detected:
+${document.getElementById("parentResult").textContent}
+
+postMessage:
+${document.getElementById("messageSentResult").textContent}
+
+Parent response:
+${document.getElementById("messageResponseResult").textContent}
+
+New window:
+${document.getElementById("windowResult").textContent}
+
+EVENT LOG
+=========
+
+${events.join("\n")}
+`;
+
+    try {
+
+      await navigator.clipboard
+        .writeText(report);
+
+      log(
+        "Full report copied to clipboard"
+      );
+
+      alert(
+        "Report copied. Paste it into ChatGPT."
+      );
+
+    } catch (error) {
+
+      log(
+        "Report copy failed: " +
+        error.message
+      );
+
+      prompt(
+        "Copy this report:",
+        report
+      );
+    }
+  }
+
+
+  function clearLog() {
+
+    events.length = 0;
+
+    document.getElementById(
+      "eventLog"
+    ).textContent = "";
+
+    log(
+      "Event log cleared"
+    );
+  }
+
+
+  /* =========================
+     INITIALIZE
+     ========================= */
+
+  setResult(
+    "visibilityResult",
+    document.visibilityState,
+    "pass"
+  );
+
+  log(
+    "Capability Lab initialized"
+  );
+
+  testEnvironment();
+
+  testStorage();
+
+</script>
+
+</body>
+</html>
