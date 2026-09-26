@@ -1,0 +1,2129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Training Lab</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f3f4f6;
+      color: #222;
+    }
+
+    body {
+      padding: 20px;
+    }
+
+    .app {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .header {
+      margin-bottom: 18px;
+    }
+
+    .header h1 {
+      margin: 0 0 6px;
+      font-size: 30px;
+    }
+
+    .header p {
+      margin: 0;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 22px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .status-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .status-box {
+      background: #fff;
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+
+    .status-label {
+      display: block;
+      color: #777;
+      font-size: 12px;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .status-value {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .progress-shell {
+      width: 100%;
+      height: 12px;
+      background: #e4e7ec;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: #292929;
+      transition: width .3s ease;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 800;
+      color: #777;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 8px;
+    }
+
+    .scenario-title {
+      margin: 0 0 10px;
+      font-size: 26px;
+      line-height: 1.15;
+    }
+
+    .scenario-text {
+      font-size: 17px;
+      line-height: 1.55;
+      margin-bottom: 20px;
+    }
+
+    .choices {
+      display: grid;
+      gap: 10px;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+      border: 0;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-weight: 700;
+    }
+
+    .choice {
+      width: 100%;
+      text-align: left;
+      background: #f3f4f6;
+      color: #222;
+      border: 2px solid transparent;
+      transition:
+        transform .1s ease,
+        border-color .15s ease,
+        background .15s ease;
+    }
+
+    .choice:hover {
+      border-color: #777;
+    }
+
+    .choice:active {
+      transform: scale(.995);
+    }
+
+    .primary {
+      background: #292929;
+      color: #fff;
+    }
+
+    .secondary {
+      background: #666;
+      color: #fff;
+    }
+
+    .danger {
+      background: #a61b1b;
+      color: #fff;
+    }
+
+    .feedback {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 8px;
+      line-height: 1.5;
+    }
+
+    .feedback.correct {
+      background: #e8f5eb;
+      border-left: 5px solid #16803c;
+    }
+
+    .feedback.incorrect {
+      background: #fff0ee;
+      border-left: 5px solid #b42318;
+    }
+
+    .feedback h3 {
+      margin: 0 0 7px;
+    }
+
+    .feedback p {
+      margin: 0;
+    }
+
+    .next-row {
+      margin-top: 16px;
+      text-align: right;
+    }
+
+    .resume-banner {
+      background: #eef4ff;
+      border-left: 5px solid #175cd3;
+    }
+
+    .resume-banner h2 {
+      margin-top: 0;
+    }
+
+    .resume-banner p {
+      line-height: 1.5;
+    }
+
+    .results {
+      text-align: center;
+    }
+
+    .results h2 {
+      font-size: 30px;
+      margin-top: 0;
+    }
+
+    .score-big {
+      font-size: 64px;
+      font-weight: 900;
+      line-height: 1;
+      margin: 18px 0 8px;
+    }
+
+    .score-label {
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 22px 0;
+    }
+
+    .result-box {
+      background: #f3f4f6;
+      border-radius: 8px;
+      padding: 15px;
+    }
+
+    .result-box strong {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+
+    .result-box span {
+      color: #666;
+      font-size: 12px;
+    }
+
+    .decision-review {
+      text-align: left;
+      margin-top: 24px;
+    }
+
+    .decision-item {
+      padding: 14px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .decision-item:last-child {
+      border-bottom: 0;
+    }
+
+    .decision-item strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .correct-text {
+      color: #16803c;
+    }
+
+    .incorrect-text {
+      color: #b42318;
+    }
+
+    .tools h2 {
+      margin-top: 0;
+    }
+
+    .tools-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .event-log {
+      margin-top: 14px;
+      height: 220px;
+      overflow-y: auto;
+      background: #171717;
+      color: #eee;
+      padding: 12px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 12px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+
+    .payload {
+      margin-top: 14px;
+      max-height: 300px;
+      overflow: auto;
+      background: #f3f4f6;
+      padding: 12px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .small {
+      font-size: 12px;
+      color: #777;
+      line-height: 1.45;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 700px) {
+      body {
+        padding: 10px;
+      }
+
+      .status-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .scenario-title {
+        font-size: 22px;
+      }
+
+      .score-big {
+        font-size: 52px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <header class="header">
+    <h1>Training Lab</h1>
+    <p>
+      Stateful scenario prototype for testing interactive learning,
+      scoring, persistence, resume behavior, and event tracking.
+    </p>
+  </header>
+
+
+  <!-- RESUME -->
+
+  <section
+    id="resumeCard"
+    class="card resume-banner hidden">
+
+    <h2>Previous Session Found</h2>
+
+    <p id="resumeText">
+      A saved training session was found.
+    </p>
+
+    <button
+      class="primary"
+      onclick="resumeTraining()">
+      Resume Training
+    </button>
+
+    <button
+      class="secondary"
+      onclick="restartTraining()">
+      Start Over
+    </button>
+
+  </section>
+
+
+  <!-- START -->
+
+  <section
+    id="startCard"
+    class="card">
+
+    <div class="eyebrow">
+      Scenario Prototype
+    </div>
+
+    <h2 class="scenario-title">
+      The Busy Shift
+    </h2>
+
+    <p class="scenario-text">
+      You are leading a busy operation. During the next few minutes,
+      several situations will develop at the same time.
+    </p>
+
+    <p class="scenario-text">
+      Choose how you would respond. Your decisions affect your score,
+      and your progress will be saved automatically.
+    </p>
+
+    <button
+      class="primary"
+      onclick="startTraining()">
+      Begin Scenario
+    </button>
+
+  </section>
+
+
+  <!-- STATUS -->
+
+  <section
+    id="statusArea"
+    class="hidden">
+
+    <div class="status-row">
+
+      <div class="status-box">
+        <span class="status-label">
+          Step
+        </span>
+
+        <span
+          class="status-value"
+          id="stepStatus">
+          1 / 5
+        </span>
+      </div>
+
+
+      <div class="status-box">
+        <span class="status-label">
+          Score
+        </span>
+
+        <span
+          class="status-value"
+          id="scoreStatus">
+          0
+        </span>
+      </div>
+
+
+      <div class="status-box">
+        <span class="status-label">
+          Decisions
+        </span>
+
+        <span
+          class="status-value"
+          id="decisionStatus">
+          0
+        </span>
+      </div>
+
+
+      <div class="status-box">
+        <span class="status-label">
+          Attempt
+        </span>
+
+        <span
+          class="status-value"
+          id="attemptStatus">
+          1
+        </span>
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <div class="status-label">
+        Progress
+      </div>
+
+      <div class="progress-shell">
+        <div
+          class="progress-bar"
+          id="progressBar">
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- SCENARIO -->
+
+  <section
+    id="scenarioCard"
+    class="card hidden">
+
+    <div
+      class="eyebrow"
+      id="scenarioEyebrow">
+      Step 1
+    </div>
+
+    <h2
+      class="scenario-title"
+      id="scenarioTitle">
+    </h2>
+
+    <div
+      class="scenario-text"
+      id="scenarioText">
+    </div>
+
+    <div
+      class="choices"
+      id="choices">
+    </div>
+
+    <div
+      id="feedback"
+      class="feedback hidden">
+    </div>
+
+    <div
+      id="nextRow"
+      class="next-row hidden">
+
+      <button
+        class="primary"
+        onclick="nextScenario()">
+        Continue
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- RESULTS -->
+
+  <section
+    id="resultsCard"
+    class="card results hidden">
+
+    <div class="eyebrow">
+      Scenario Complete
+    </div>
+
+    <h2>
+      Training Complete
+    </h2>
+
+    <div
+      class="score-big"
+      id="finalScore">
+      0
+    </div>
+
+    <div class="score-label">
+      Final Score
+    </div>
+
+
+    <div class="result-grid">
+
+      <div class="result-box">
+        <strong id="correctResult">
+          0
+        </strong>
+
+        <span>
+          Strong Decisions
+        </span>
+      </div>
+
+
+      <div class="result-box">
+        <strong id="decisionResult">
+          0
+        </strong>
+
+        <span>
+          Total Decisions
+        </span>
+      </div>
+
+
+      <div class="result-box">
+        <strong id="attemptResult">
+          1
+        </strong>
+
+        <span>
+          Attempt
+        </span>
+      </div>
+
+    </div>
+
+
+    <button
+      class="primary"
+      onclick="restartTraining()">
+      Run Scenario Again
+    </button>
+
+
+    <div class="decision-review">
+
+      <h3>
+        Decision Review
+      </h3>
+
+      <div id="decisionReview">
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- LAB TOOLS -->
+
+  <section class="card tools">
+
+    <h2>
+      Lab Tools
+    </h2>
+
+    <div class="tools-row">
+
+      <button
+        class="secondary"
+        onclick="showStatePayload()">
+        Show Saved State
+      </button>
+
+      <button
+        class="secondary"
+        onclick="showEventPayload()">
+        Show Event Payload
+      </button>
+
+      <button
+        class="secondary"
+        onclick="simulateReload()">
+        Save & Reload
+      </button>
+
+      <button
+        class="danger"
+        onclick="clearTrainingData()">
+        Clear Training Data
+      </button>
+
+    </div>
+
+    <div
+      id="payload"
+      class="payload">
+      Select a lab tool to inspect application data.
+    </div>
+
+    <h3>
+      Event Log
+    </h3>
+
+    <div
+      id="eventLog"
+      class="event-log">
+    </div>
+
+    <p class="small">
+      Events are stored locally for this prototype.
+      No event data is transmitted externally.
+    </p>
+
+  </section>
+
+</div>
+
+
+<script>
+
+  /* =====================================
+     CONFIG
+     ===================================== */
+
+  const STORAGE_KEY =
+    "trainingLabStateV1";
+
+  const EVENT_KEY =
+    "trainingLabEventsV1";
+
+  const ATTEMPT_KEY =
+    "trainingLabAttemptsV1";
+
+  const SCENARIO_ID =
+    "busy-shift-01";
+
+  const VERSION = 1;
+
+
+  /* =====================================
+     SCENARIOS
+     ===================================== */
+
+  const scenarios = [
+
+    {
+      id: "rush",
+
+      title:
+        "The Rush Begins",
+
+      text:
+        "A sudden rush arrives while the team is already working through several active orders. One team member begins falling behind and asks for help.",
+
+      choices: [
+
+        {
+          id: "A",
+
+          text:
+            "Stay focused on your current task and tell them to work faster.",
+
+          points: 0,
+
+          correct: false,
+
+          feedback:
+            "This keeps you focused on one task, but it does not address the growing bottleneck affecting the operation."
+        },
+
+        {
+          id: "B",
+
+          text:
+            "Quickly assess the bottleneck, reposition support, and communicate priorities to the team.",
+
+          points: 20,
+
+          correct: true,
+
+          feedback:
+            "Strong response. You identify the operational constraint, redirect support, and give the team clear priorities."
+        },
+
+        {
+          id: "C",
+
+          text:
+            "Stop the entire operation so everyone can discuss what is going wrong.",
+
+          points: 5,
+
+          correct: false,
+
+          feedback:
+            "Communication matters, but stopping the entire operation during the rush creates another operational problem."
+        }
+
+      ]
+    },
+
+
+    {
+      id: "quality",
+
+      title:
+        "Speed vs. Quality",
+
+      text:
+        "The team is moving faster, but you notice that accuracy and product quality are beginning to slip as everyone tries to keep up.",
+
+      choices: [
+
+        {
+          id: "A",
+
+          text:
+            "Allow the shortcuts temporarily because speed is the highest priority during a rush.",
+
+          points: 0,
+
+          correct: false,
+
+          feedback:
+            "Speed matters, but allowing standards to collapse can create remakes, complaints, and even more pressure."
+        },
+
+        {
+          id: "B",
+
+          text:
+            "Reinforce the critical quality standards while simplifying priorities so the team can execute both speed and accuracy.",
+
+          points: 20,
+
+          correct: true,
+
+          feedback:
+            "Strong response. You protect the standards that matter while helping the team focus on execution."
+        },
+
+        {
+          id: "C",
+
+          text:
+            "Take over every important task yourself to make sure it is done correctly.",
+
+          points: 5,
+
+          correct: false,
+
+          feedback:
+            "You may protect quality temporarily, but becoming the bottleneck yourself reduces the team's ability to recover."
+        }
+
+      ]
+    },
+
+
+    {
+      id: "guest",
+
+      title:
+        "A Frustrated Guest",
+
+      text:
+        "A guest approaches visibly frustrated because their order has taken longer than expected. The team is still under pressure.",
+
+      choices: [
+
+        {
+          id: "A",
+
+          text:
+            "Acknowledge the guest, understand the issue, give a clear update, and take ownership of the next step.",
+
+          points: 20,
+
+          correct: true,
+
+          feedback:
+            "Strong response. The guest receives acknowledgement, clarity, and ownership without unnecessarily disrupting the entire operation."
+        },
+
+        {
+          id: "B",
+
+          text:
+            "Explain that the restaurant is busy and that everyone is waiting.",
+
+          points: 5,
+
+          correct: false,
+
+          feedback:
+            "The explanation may be accurate, but it does not resolve the guest's concern or demonstrate ownership."
+        },
+
+        {
+          id: "C",
+
+          text:
+            "Avoid engaging until the rush slows down.",
+
+          points: 0,
+
+          correct: false,
+
+          feedback:
+            "Delaying acknowledgement can increase frustration and make recovery more difficult."
+        }
+
+      ]
+    },
+
+
+    {
+      id: "team",
+
+      title:
+        "A Team Member Makes a Mistake",
+
+      text:
+        "A team member makes an avoidable mistake that causes a remake. They immediately look worried because they know the team is already behind.",
+
+      choices: [
+
+        {
+          id: "A",
+
+          text:
+            "Correct them sharply in front of the team so everyone understands the mistake.",
+
+          points: 0,
+
+          correct: false,
+
+          feedback:
+            "The mistake needs correction, but public embarrassment can damage communication and make people less likely to surface problems quickly."
+        },
+
+        {
+          id: "B",
+
+          text:
+            "Ignore the mistake because there is no time to address it.",
+
+          points: 5,
+
+          correct: false,
+
+          feedback:
+            "This avoids slowing down now, but it leaves the cause of the mistake unresolved."
+        },
+
+        {
+          id: "C",
+
+          text:
+            "Fix the immediate issue, give concise coaching, and return to deeper coaching when operations stabilize.",
+
+          points: 20,
+
+          correct: true,
+
+          feedback:
+            "Strong response. You solve the immediate operational problem while preserving a later opportunity for effective coaching."
+        }
+
+      ]
+    },
+
+
+    {
+      id: "recovery",
+
+      title:
+        "Recovering the Operation",
+
+      text:
+        "The rush begins to slow. The team handled the pressure, but the workspace needs recovery and several team members look exhausted.",
+
+      choices: [
+
+        {
+          id: "A",
+
+          text:
+            "Immediately begin another major task while everyone is still moving quickly.",
+
+          points: 5,
+
+          correct: false,
+
+          feedback:
+            "Momentum can be useful, but failing to recover the operation and team can create problems during the next rush."
+        },
+
+        {
+          id: "B",
+
+          text:
+            "Reset priorities, recover the workspace, recognize the team's effort, and prepare for the next demand period.",
+
+          points: 20,
+
+          correct: true,
+
+          feedback:
+            "Strong response. Recovery includes the operation, the environment, and the people who just handled the rush."
+        },
+
+        {
+          id: "C",
+
+          text:
+            "Let everyone independently decide what they want to do next.",
+
+          points: 0,
+
+          correct: false,
+
+          feedback:
+            "Autonomy can help, but the operation still needs coordinated recovery priorities."
+        }
+
+      ]
+    }
+
+  ];
+
+
+  /* =====================================
+     STATE
+     ===================================== */
+
+  let state =
+    createNewState();
+
+  let events =
+    loadEvents();
+
+
+  function createNewState() {
+
+    return {
+
+      version:
+        VERSION,
+
+      scenario:
+        SCENARIO_ID,
+
+      currentStep:
+        0,
+
+      score:
+        0,
+
+      decisions:
+        [],
+
+      completed:
+        false,
+
+      started:
+        false,
+
+      feedbackVisible:
+        false,
+
+      currentChoice:
+        null,
+
+      attempt:
+        getAttempt(),
+
+      startedAt:
+        null,
+
+      completedAt:
+        null,
+
+      lastUpdated:
+        new Date().toISOString()
+
+    };
+  }
+
+
+  /* =====================================
+     STORAGE
+     ===================================== */
+
+  function saveState() {
+
+    state.lastUpdated =
+      new Date().toISOString();
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(state)
+    );
+  }
+
+
+  function loadState() {
+
+    try {
+
+      const saved =
+        localStorage.getItem(
+          STORAGE_KEY
+        );
+
+      if (!saved) {
+        return null;
+      }
+
+      const parsed =
+        JSON.parse(saved);
+
+      if (
+        parsed.version !== VERSION ||
+        parsed.scenario !== SCENARIO_ID
+      ) {
+        return null;
+      }
+
+      return parsed;
+
+    } catch (error) {
+
+      logEvent(
+        "state_load_error",
+        {
+          message:
+            error.message
+        }
+      );
+
+      return null;
+    }
+  }
+
+
+  function loadEvents() {
+
+    try {
+
+      return JSON.parse(
+        localStorage.getItem(
+          EVENT_KEY
+        ) || "[]"
+      );
+
+    } catch (error) {
+
+      return [];
+    }
+  }
+
+
+  function saveEvents() {
+
+    localStorage.setItem(
+      EVENT_KEY,
+      JSON.stringify(events)
+    );
+  }
+
+
+  function getAttempt() {
+
+    return Number(
+      localStorage.getItem(
+        ATTEMPT_KEY
+      ) || 1
+    );
+  }
+
+
+  function incrementAttempt() {
+
+    const next =
+      getAttempt() + 1;
+
+    localStorage.setItem(
+      ATTEMPT_KEY,
+      String(next)
+    );
+
+    return next;
+  }
+
+
+  /* =====================================
+     EVENT SYSTEM
+     ===================================== */
+
+  function logEvent(
+    type,
+    data = {}
+  ) {
+
+    const event = {
+
+      event:
+        type,
+
+      scenario:
+        SCENARIO_ID,
+
+      timestamp:
+        new Date().toISOString(),
+
+      step:
+        state.currentStep,
+
+      attempt:
+        state.attempt,
+
+      data:
+        data
+
+    };
+
+    events.push(event);
+
+    saveEvents();
+
+    renderEventLog();
+  }
+
+
+  function renderEventLog() {
+
+    const log =
+      document.getElementById(
+        "eventLog"
+      );
+
+    if (!events.length) {
+
+      log.textContent =
+        "No events recorded.";
+
+      return;
+    }
+
+    const recent =
+      events.slice(-30);
+
+    log.textContent =
+      recent
+        .map(function(event) {
+
+          const time =
+            new Date(
+              event.timestamp
+            ).toLocaleTimeString();
+
+          return (
+            time +
+            " — " +
+            event.event +
+            (
+              Object.keys(
+                event.data || {}
+              ).length
+                ? " — " +
+                  JSON.stringify(
+                    event.data
+                  )
+                : ""
+            )
+          );
+
+        })
+        .join("\n");
+
+    log.scrollTop =
+      log.scrollHeight;
+  }
+
+
+  /* =====================================
+     START / RESUME
+     ===================================== */
+
+  function startTraining() {
+
+    state.started =
+      true;
+
+    state.startedAt =
+      new Date().toISOString();
+
+    saveState();
+
+    logEvent(
+      "training_started"
+    );
+
+    showTraining();
+
+    renderScenario();
+  }
+
+
+  function resumeTraining() {
+
+    logEvent(
+      "training_resumed",
+      {
+        resumedStep:
+          state.currentStep
+      }
+    );
+
+    showTraining();
+
+    if (state.completed) {
+
+      showResults();
+
+    } else {
+
+      renderScenario();
+    }
+  }
+
+
+  function restartTraining() {
+
+    const attempt =
+      incrementAttempt();
+
+    state =
+      createNewState();
+
+    state.attempt =
+      attempt;
+
+    state.started =
+      true;
+
+    state.startedAt =
+      new Date().toISOString();
+
+    saveState();
+
+    logEvent(
+      "training_restarted"
+    );
+
+    showTraining();
+
+    renderScenario();
+  }
+
+
+  /* =====================================
+     DISPLAY
+     ===================================== */
+
+  function hideAllPrimaryCards() {
+
+    document
+      .getElementById(
+        "resumeCard"
+      )
+      .classList.add(
+        "hidden"
+      );
+
+    document
+      .getElementById(
+        "startCard"
+      )
+      .classList.add(
+        "hidden"
+      );
+
+    document
+      .getElementById(
+        "scenarioCard"
+      )
+      .classList.add(
+        "hidden"
+      );
+
+    document
+      .getElementById(
+        "resultsCard"
+      )
+      .classList.add(
+        "hidden"
+      );
+  }
+
+
+  function showTraining() {
+
+    hideAllPrimaryCards();
+
+    document
+      .getElementById(
+        "statusArea"
+      )
+      .classList.remove(
+        "hidden"
+      );
+
+    document
+      .getElementById(
+        "scenarioCard"
+      )
+      .classList.remove(
+        "hidden"
+      );
+
+    updateStatus();
+  }
+
+
+  function updateStatus() {
+
+    const displayStep =
+      Math.min(
+        state.currentStep + 1,
+        scenarios.length
+      );
+
+    document.getElementById(
+      "stepStatus"
+    ).textContent =
+      displayStep +
+      " / " +
+      scenarios.length;
+
+    document.getElementById(
+      "scoreStatus"
+    ).textContent =
+      state.score;
+
+    document.getElementById(
+      "decisionStatus"
+    ).textContent =
+      state.decisions.length;
+
+    document.getElementById(
+      "attemptStatus"
+    ).textContent =
+      state.attempt;
+
+    const progress =
+      state.completed
+        ? 100
+        : (
+            state.currentStep /
+            scenarios.length
+          ) * 100;
+
+    document.getElementById(
+      "progressBar"
+    ).style.width =
+      progress + "%";
+  }
+
+
+  /* =====================================
+     SCENARIO ENGINE
+     ===================================== */
+
+  function renderScenario() {
+
+    if (
+      state.currentStep >=
+      scenarios.length
+    ) {
+
+      completeTraining();
+
+      return;
+    }
+
+    const scenario =
+      scenarios[
+        state.currentStep
+      ];
+
+    document.getElementById(
+      "scenarioEyebrow"
+    ).textContent =
+      "Step " +
+      (
+        state.currentStep + 1
+      ) +
+      " of " +
+      scenarios.length;
+
+    document.getElementById(
+      "scenarioTitle"
+    ).textContent =
+      scenario.title;
+
+    document.getElementById(
+      "scenarioText"
+    ).textContent =
+      scenario.text;
+
+
+    const choices =
+      document.getElementById(
+        "choices"
+      );
+
+    choices.innerHTML = "";
+
+
+    scenario.choices.forEach(
+      function(choice) {
+
+        const button =
+          document.createElement(
+            "button"
+          );
+
+        button.className =
+          "choice";
+
+        button.textContent =
+          choice.id +
+          ". " +
+          choice.text;
+
+        button.onclick =
+          function() {
+
+            selectChoice(
+              scenario,
+              choice
+            );
+          };
+
+        choices.appendChild(
+          button
+        );
+      }
+    );
+
+
+    document.getElementById(
+      "feedback"
+    ).classList.add(
+      "hidden"
+    );
+
+    document.getElementById(
+      "nextRow"
+    ).classList.add(
+      "hidden"
+    );
+
+
+    /*
+      Restore feedback if the learner
+      left after making a choice but
+      before clicking Continue.
+    */
+
+    if (
+      state.feedbackVisible &&
+      state.currentChoice
+    ) {
+
+      const restoredChoice =
+        scenario.choices.find(
+          function(choice) {
+            return (
+              choice.id ===
+              state.currentChoice
+            );
+          }
+        );
+
+      if (restoredChoice) {
+
+        showFeedback(
+          restoredChoice
+        );
+
+        disableChoices();
+      }
+    }
+
+
+    updateStatus();
+
+    logEvent(
+      "scenario_viewed",
+      {
+        scenarioId:
+          scenario.id
+      }
+    );
+  }
+
+
+  function selectChoice(
+    scenario,
+    choice
+  ) {
+
+    if (
+      state.feedbackVisible
+    ) {
+      return;
+    }
+
+
+    state.score +=
+      choice.points;
+
+
+    state.decisions.push({
+
+      step:
+        state.currentStep,
+
+      scenarioId:
+        scenario.id,
+
+      scenarioTitle:
+        scenario.title,
+
+      choice:
+        choice.id,
+
+      choiceText:
+        choice.text,
+
+      points:
+        choice.points,
+
+      correct:
+        choice.correct,
+
+      timestamp:
+        new Date().toISOString()
+
+    });
+
+
+    state.feedbackVisible =
+      true;
+
+    state.currentChoice =
+      choice.id;
+
+
+    saveState();
+
+
+    logEvent(
+      "decision_made",
+      {
+        scenarioId:
+          scenario.id,
+
+        choice:
+          choice.id,
+
+        correct:
+          choice.correct,
+
+        points:
+          choice.points,
+
+        score:
+          state.score
+      }
+    );
+
+
+    showFeedback(
+      choice
+    );
+
+    disableChoices();
+
+    updateStatus();
+  }
+
+
+  function showFeedback(
+    choice
+  ) {
+
+    const feedback =
+      document.getElementById(
+        "feedback"
+      );
+
+    feedback.className =
+      "feedback " +
+      (
+        choice.correct
+          ? "correct"
+          : "incorrect"
+      );
+
+
+    feedback.innerHTML =
+
+      "<h3>" +
+      (
+        choice.correct
+          ? "Strong Decision"
+          : "Consider the Impact"
+      ) +
+      "</h3>" +
+
+      "<p>" +
+      choice.feedback +
+      "</p>";
+
+
+    feedback.classList.remove(
+      "hidden"
+    );
+
+    document.getElementById(
+      "nextRow"
+    ).classList.remove(
+      "hidden"
+    );
+  }
+
+
+  function disableChoices() {
+
+    document
+      .querySelectorAll(
+        ".choice"
+      )
+      .forEach(
+        function(button) {
+
+          button.disabled =
+            true;
+
+          button.style.opacity =
+            ".55";
+
+          button.style.cursor =
+            "default";
+        }
+      );
+  }
+
+
+  function nextScenario() {
+
+    state.currentStep++;
+
+    state.feedbackVisible =
+      false;
+
+    state.currentChoice =
+      null;
+
+    saveState();
+
+    if (
+      state.currentStep >=
+      scenarios.length
+    ) {
+
+      completeTraining();
+
+    } else {
+
+      renderScenario();
+    }
+  }
+
+
+  /* =====================================
+     COMPLETION
+     ===================================== */
+
+  function completeTraining() {
+
+    state.completed =
+      true;
+
+    state.completedAt =
+      new Date().toISOString();
+
+    saveState();
+
+
+    logEvent(
+      "training_completed",
+      {
+        finalScore:
+          state.score,
+
+        decisions:
+          state.decisions.length
+      }
+    );
+
+
+    showResults();
+  }
+
+
+  function showResults() {
+
+    hideAllPrimaryCards();
+
+    document
+      .getElementById(
+        "statusArea"
+      )
+      .classList.remove(
+        "hidden"
+      );
+
+    document
+      .getElementById(
+        "resultsCard"
+      )
+      .classList.remove(
+        "hidden"
+      );
+
+
+    const correct =
+      state.decisions.filter(
+        function(decision) {
+          return decision.correct;
+        }
+      ).length;
+
+
+    document.getElementById(
+      "finalScore"
+    ).textContent =
+      state.score +
+      " / " +
+      (
+        scenarios.length * 20
+      );
+
+
+    document.getElementById(
+      "correctResult"
+    ).textContent =
+      correct;
+
+
+    document.getElementById(
+      "decisionResult"
+    ).textContent =
+      state.decisions.length;
+
+
+    document.getElementById(
+      "attemptResult"
+    ).textContent =
+      state.attempt;
+
+
+    const review =
+      document.getElementById(
+        "decisionReview"
+      );
+
+    review.innerHTML = "";
+
+
+    state.decisions.forEach(
+      function(decision) {
+
+        const item =
+          document.createElement(
+            "div"
+          );
+
+        item.className =
+          "decision-item";
+
+
+        item.innerHTML =
+
+          "<strong>" +
+          decision.scenarioTitle +
+          "</strong>" +
+
+          "<div>" +
+          decision.choice +
+          ". " +
+          decision.choiceText +
+          "</div>" +
+
+          "<div class='" +
+          (
+            decision.correct
+              ? "correct-text"
+              : "incorrect-text"
+          ) +
+          "'>" +
+
+          (
+            decision.correct
+              ? "Strong decision"
+              : "Alternative response"
+          ) +
+
+          " — " +
+          decision.points +
+          " points" +
+
+          "</div>";
+
+
+        review.appendChild(
+          item
+        );
+      }
+    );
+
+
+    updateStatus();
+
+    document.getElementById(
+      "progressBar"
+    ).style.width =
+      "100%";
+  }
+
+
+  /* =====================================
+     LAB TOOLS
+     ===================================== */
+
+  function showStatePayload() {
+
+    document.getElementById(
+      "payload"
+    ).textContent =
+      JSON.stringify(
+        state,
+        null,
+        2
+      );
+
+    logEvent(
+      "state_inspected"
+    );
+  }
+
+
+  function showEventPayload() {
+
+    document.getElementById(
+      "payload"
+    ).textContent =
+      JSON.stringify(
+        events,
+        null,
+        2
+      );
+
+    logEvent(
+      "event_payload_inspected"
+    );
+  }
+
+
+  function simulateReload() {
+
+    saveState();
+
+    logEvent(
+      "manual_reload_requested"
+    );
+
+    location.reload();
+  }
+
+
+  function clearTrainingData() {
+
+    const confirmed =
+      confirm(
+        "Clear all saved Training Lab progress, attempts, and events?"
+      );
+
+    if (!confirmed) {
+      return;
+    }
+
+    localStorage.removeItem(
+      STORAGE_KEY
+    );
+
+    localStorage.removeItem(
+      EVENT_KEY
+    );
+
+    localStorage.removeItem(
+      ATTEMPT_KEY
+    );
+
+    location.reload();
+  }
+
+
+  /* =====================================
+     VISIBILITY TRACKING
+     ===================================== */
+
+  document.addEventListener(
+    "visibilitychange",
+    function() {
+
+      logEvent(
+        "visibility_changed",
+        {
+          visibility:
+            document.visibilityState
+        }
+      );
+    }
+  );
+
+
+  /* =====================================
+     INITIALIZATION
+     ===================================== */
+
+  function initialize() {
+
+    const saved =
+      loadState();
+
+
+    if (
+      saved &&
+      saved.started
+    ) {
+
+      state =
+        saved;
+
+
+      document.getElementById(
+        "startCard"
+      ).classList.add(
+        "hidden"
+      );
+
+
+      document.getElementById(
+        "resumeCard"
+      ).classList.remove(
+        "hidden"
+      );
+
+
+      let description;
+
+
+      if (state.completed) {
+
+        description =
+          "A completed training session was found. Resume to review your results, or start over for another attempt.";
+
+      } else {
+
+        description =
+          "A saved session was found at Step " +
+          (
+            state.currentStep + 1
+          ) +
+          " of " +
+          scenarios.length +
+          " with a current score of " +
+          state.score +
+          ".";
+      }
+
+
+      document.getElementById(
+        "resumeText"
+      ).textContent =
+        description;
+
+
+      logEvent(
+        "saved_session_detected",
+        {
+          step:
+            state.currentStep,
+
+          completed:
+            state.completed
+        }
+      );
+
+    } else {
+
+      document.getElementById(
+        "startCard"
+      ).classList.remove(
+        "hidden"
+      );
+
+
+      document.getElementById(
+        "resumeCard"
+      ).classList.add(
+        "hidden"
+      );
+
+
+      logEvent(
+        "new_session_ready"
+      );
+    }
+
+
+    renderEventLog();
+  }
+
+
+  initialize();
+
+</script>
+
+</body>
+</html>
