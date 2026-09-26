@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wisetail Capability Lab</title>
+  <title>Wisetail Test Lab</title>
 
   <style>
     * {
@@ -24,18 +24,27 @@
     }
 
     .lab {
-      max-width: 1000px;
+      max-width: 1100px;
       margin: 0 auto;
     }
 
     h1 {
-      margin: 0 0 6px;
+      margin: 0 0 5px;
       font-size: 30px;
     }
 
     .subtitle {
-      margin: 0 0 22px;
+      margin: 0 0 20px;
       color: #666;
+    }
+
+    .notice {
+      margin-bottom: 18px;
+      padding: 12px 14px;
+      background: #fff8dc;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.45;
     }
 
     .grid {
@@ -49,6 +58,7 @@
       border-radius: 10px;
       padding: 18px;
       box-shadow: 0 2px 8px rgba(0,0,0,.08);
+      min-width: 0;
     }
 
     .card h2 {
@@ -59,7 +69,8 @@
     .result {
       display: flex;
       justify-content: space-between;
-      gap: 20px;
+      align-items: flex-start;
+      gap: 18px;
       padding: 7px 0;
       border-bottom: 1px solid #eee;
     }
@@ -69,6 +80,7 @@
     }
 
     .value {
+      max-width: 58%;
       text-align: right;
       font-weight: 700;
       word-break: break-word;
@@ -86,6 +98,10 @@
       color: #946200;
     }
 
+    .info {
+      color: #175cd3;
+    }
+
     button,
     input,
     select {
@@ -100,7 +116,11 @@
       background: #292929;
       color: white;
       font-weight: 700;
-      margin: 4px;
+      margin: 4px 4px 4px 0;
+    }
+
+    button.secondary {
+      background: #666;
     }
 
     input,
@@ -113,7 +133,7 @@
     }
 
     .log {
-      height: 220px;
+      height: 260px;
       overflow-y: auto;
       background: #171717;
       color: #eee;
@@ -121,11 +141,37 @@
       padding: 12px;
       font-family: monospace;
       font-size: 12px;
+      line-height: 1.45;
       white-space: pre-wrap;
     }
 
     .full {
       grid-column: 1 / -1;
+    }
+
+    .small {
+      margin-top: 8px;
+      color: #666;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .saved-value {
+      margin-top: 10px;
+      padding: 10px;
+      background: #f4f5f7;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 12px;
+      word-break: break-word;
+    }
+
+    #dynamicTarget {
+      margin-top: 10px;
+      min-height: 38px;
+      padding: 10px;
+      background: #f4f5f7;
+      border-radius: 6px;
     }
 
     @media (max-width: 700px) {
@@ -140,6 +186,10 @@
       .full {
         grid-column: auto;
       }
+
+      .value {
+        max-width: 52%;
+      }
     }
   </style>
 </head>
@@ -148,18 +198,23 @@
 
 <div class="lab">
 
-  <h1>Wisetail Capability Lab</h1>
+  <h1>Wisetail Test Lab</h1>
 
   <p class="subtitle">
-    Browser and iframe capability diagnostics
+    Embedded web application capability diagnostics
   </p>
+
+  <div class="notice">
+    This page uses synthetic test data only. Network tests do not send
+    employee, restaurant, Wisetail, or Freebirds operational information.
+  </div>
 
   <div class="grid">
 
     <!-- ENVIRONMENT -->
 
     <section class="card">
-      <h2>Environment</h2>
+      <h2>1. Environment</h2>
 
       <div class="result">
         <span>Inside iframe</span>
@@ -167,7 +222,12 @@
       </div>
 
       <div class="result">
-        <span>Referrer available</span>
+        <span>Parent detected</span>
+        <span class="value" id="parentResult">Testing...</span>
+      </div>
+
+      <div class="result">
+        <span>Referrer</span>
         <span class="value" id="referrerResult">Testing...</span>
       </div>
 
@@ -177,7 +237,7 @@
       </div>
 
       <div class="result">
-        <span>Touch support</span>
+        <span>Touch points</span>
         <span class="value" id="touchResult">Testing...</span>
       </div>
 
@@ -185,13 +245,18 @@
         <span>Online</span>
         <span class="value" id="onlineResult">Testing...</span>
       </div>
+
+      <div class="result">
+        <span>Visibility</span>
+        <span class="value" id="visibilityResult">Testing...</span>
+      </div>
     </section>
 
 
     <!-- STORAGE -->
 
     <section class="card">
-      <h2>Storage</h2>
+      <h2>2. Storage & Persistence</h2>
 
       <div class="result">
         <span>localStorage</span>
@@ -208,20 +273,33 @@
         <span class="value" id="visitResult">Testing...</span>
       </div>
 
-      <button onclick="testStorageWrite()">
-        Write Test Value
+      <div class="result">
+        <span>Saved test value</span>
+        <span class="value" id="savedValueStatus">Checking...</span>
+      </div>
+
+      <button onclick="writePersistentValue()">
+        Write Persistent Value
       </button>
 
-      <button onclick="clearLabStorage()">
-        Clear Test Storage
+      <button onclick="inspectPersistentValue()">
+        Inspect Saved Value
       </button>
+
+      <button class="secondary" onclick="clearLabStorage()">
+        Clear Lab Storage
+      </button>
+
+      <div class="saved-value" id="savedValueDisplay">
+        No value inspected yet.
+      </div>
     </section>
 
 
     <!-- INTERACTION -->
 
     <section class="card">
-      <h2>Interaction</h2>
+      <h2>3. Interaction & Dynamic UI</h2>
 
       <label>
         Test text input
@@ -245,11 +323,22 @@
         Submit Interaction
       </button>
 
+      <button onclick="testDynamicDOM()">
+        Test Dynamic Rendering
+      </button>
+
       <div class="result">
         <span>Form interaction</span>
-        <span class="value" id="interactionResult">
-          Not tested
-        </span>
+        <span class="value" id="interactionResult">Not tested</span>
+      </div>
+
+      <div class="result">
+        <span>Dynamic rendering</span>
+        <span class="value" id="dynamicResult">Not tested</span>
+      </div>
+
+      <div id="dynamicTarget">
+        Dynamic content will appear here.
       </div>
     </section>
 
@@ -257,7 +346,7 @@
     <!-- BROWSER FEATURES -->
 
     <section class="card">
-      <h2>Browser / Iframe Features</h2>
+      <h2>4. Browser / Iframe Features</h2>
 
       <button onclick="testClipboard()">
         Test Clipboard
@@ -272,88 +361,221 @@
       </button>
 
       <div class="result">
-        <span>Clipboard</span>
-        <span class="value" id="clipboardResult">
-          Not tested
-        </span>
+        <span>Clipboard write</span>
+        <span class="value" id="clipboardResult">Not tested</span>
       </div>
 
       <div class="result">
         <span>Fullscreen</span>
-        <span class="value" id="fullscreenResult">
-          Not tested
-        </span>
+        <span class="value" id="fullscreenResult">Not tested</span>
       </div>
 
       <div class="result">
-        <span>Download</span>
-        <span class="value" id="downloadResult">
-          Not tested
-        </span>
+        <span>Download trigger</span>
+        <span class="value" id="downloadResult">Not tested</span>
       </div>
+
+      <p class="small">
+        Download success still requires visual confirmation that the file
+        actually appeared in the browser.
+      </p>
+    </section>
+
+
+    <!-- LINK / WINDOW -->
+
+    <section class="card">
+      <h2>5. Links & New Windows</h2>
+
+      <button onclick="testWindowOpen()">
+        Test window.open()
+      </button>
+
+      <button onclick="testExternalAnchor()">
+        Test External Link
+      </button>
+
+      <div class="result">
+        <span>window.open()</span>
+        <span class="value" id="windowResult">Not tested</span>
+      </div>
+
+      <div class="result">
+        <span>External anchor</span>
+        <span class="value" id="anchorResult">Not tested</span>
+      </div>
+
+      <p class="small">
+        These tests intentionally leave the new tab open so you can visually
+        confirm whether it appeared.
+      </p>
     </section>
 
 
     <!-- PARENT COMMUNICATION -->
 
     <section class="card">
-      <h2>Parent Communication</h2>
-
-      <div class="result">
-        <span>Parent window detected</span>
-        <span class="value" id="parentResult">
-          Testing...
-        </span>
-      </div>
+      <h2>6. Parent Communication</h2>
 
       <div class="result">
         <span>postMessage sent</span>
-        <span class="value" id="messageSentResult">
-          Not tested
-        </span>
+        <span class="value" id="messageSentResult">Not tested</span>
       </div>
 
       <div class="result">
         <span>Parent response</span>
-        <span class="value" id="messageResponseResult">
-          None
-        </span>
+        <span class="value" id="messageResponseResult">Not tested</span>
+      </div>
+
+      <div class="result">
+        <span>Response origin</span>
+        <span class="value" id="messageOriginResult">None</span>
       </div>
 
       <button onclick="testParentMessage()">
         Test postMessage
       </button>
+
+      <p class="small">
+        SENT only proves the browser accepted our outbound message.
+        A response requires Wisetail to have compatible parent-side code.
+      </p>
     </section>
 
 
-    <!-- PAGE BEHAVIOR -->
+    <!-- NETWORK -->
 
     <section class="card">
-      <h2>Page Behavior</h2>
+      <h2>7. Outbound Network</h2>
 
-      <div class="result">
-        <span>Page visibility</span>
-        <span class="value" id="visibilityResult">
-          Testing...
-        </span>
-      </div>
+      <button onclick="testFetchGET()">
+        Test GET Request
+      </button>
 
-      <div class="result">
-        <span>Window width</span>
-        <span class="value" id="widthResult">
-          Testing...
-        </span>
-      </div>
-
-      <button onclick="testNewWindow()">
-        Test New Window
+      <button onclick="testFetchPOST()">
+        Test POST Request
       </button>
 
       <div class="result">
-        <span>New window</span>
-        <span class="value" id="windowResult">
-          Not tested
-        </span>
+        <span>External GET</span>
+        <span class="value" id="getResult">Not tested</span>
+      </div>
+
+      <div class="result">
+        <span>GET HTTP status</span>
+        <span class="value" id="getStatusResult">—</span>
+      </div>
+
+      <div class="result">
+        <span>External POST</span>
+        <span class="value" id="postResult">Not tested</span>
+      </div>
+
+      <div class="result">
+        <span>POST HTTP status</span>
+        <span class="value" id="postStatusResult">—</span>
+      </div>
+
+      <p class="small">
+        Tests use synthetic diagnostic requests only.
+      </p>
+    </section>
+
+
+    <!-- EXTERNAL RESOURCES -->
+
+    <section class="card">
+      <h2>8. External Resource Loading</h2>
+
+      <button onclick="testExternalImage()">
+        Test External Image
+      </button>
+
+      <button onclick="testExternalScript()">
+        Test External Script
+      </button>
+
+      <div class="result">
+        <span>External image</span>
+        <span class="value" id="imageResult">Not tested</span>
+      </div>
+
+      <div class="result">
+        <span>External script</span>
+        <span class="value" id="scriptResult">Not tested</span>
+      </div>
+
+      <p class="small">
+        This tests whether the embedded application can load resources from
+        domains other than its own GitHub Pages origin.
+      </p>
+    </section>
+
+
+    <!-- INSTRUMENTATION -->
+
+    <section class="card">
+      <h2>9. Instrumentation</h2>
+
+      <div class="result">
+        <span>Events captured</span>
+        <span class="value" id="eventCountResult">0</span>
+      </div>
+
+      <div class="result">
+        <span>Button events</span>
+        <span class="value" id="buttonEventResult">Listening</span>
+      </div>
+
+      <div class="result">
+        <span>Input events</span>
+        <span class="value" id="inputEventResult">Listening</span>
+      </div>
+
+      <div class="result">
+        <span>Visibility events</span>
+        <span class="value" id="visibilityEventResult">Listening</span>
+      </div>
+
+      <button onclick="generateSyntheticEvent()">
+        Generate Test Event
+      </button>
+    </section>
+
+
+    <!-- SECURITY / DOCUMENT INFO -->
+
+    <section class="card">
+      <h2>10. Document / Security Context</h2>
+
+      <div class="result">
+        <span>Protocol</span>
+        <span class="value" id="protocolResult">Testing...</span>
+      </div>
+
+      <div class="result">
+        <span>Origin</span>
+        <span class="value" id="originResult">Testing...</span>
+      </div>
+
+      <div class="result">
+        <span>Secure context</span>
+        <span class="value" id="secureContextResult">Testing...</span>
+      </div>
+
+      <div class="result">
+        <span>Cookies enabled</span>
+        <span class="value" id="cookiesResult">Testing...</span>
+      </div>
+
+      <div class="result">
+        <span>Fullscreen API exposed</span>
+        <span class="value" id="fullscreenApiResult">Testing...</span>
+      </div>
+
+      <div class="result">
+        <span>Clipboard API exposed</span>
+        <span class="value" id="clipboardApiResult">Testing...</span>
       </div>
     </section>
 
@@ -370,9 +592,14 @@
         Copy Full Report
       </button>
 
-      <button onclick="clearLog()">
+      <button class="secondary" onclick="clearLog()">
         Clear Log
       </button>
+
+      <p class="small">
+        If Wisetail blocks clipboard access, Copy Full Report will fall back
+        to a manual copy dialog.
+      </p>
 
     </section>
 
@@ -383,11 +610,23 @@
 
 <script>
 
+  /* ======================================
+     GLOBAL STATE
+     ====================================== */
+
   const events = [];
+
+  let parentResponseReceived = false;
+
+
+  /* ======================================
+     HELPERS
+     ====================================== */
 
   function timestamp() {
     return new Date().toLocaleTimeString();
   }
+
 
   function log(message) {
 
@@ -404,6 +643,10 @@
 
     logElement.scrollTop =
       logElement.scrollHeight;
+
+    document.getElementById(
+      "eventCountResult"
+    ).textContent = events.length;
   }
 
 
@@ -417,7 +660,8 @@
     element.classList.remove(
       "pass",
       "fail",
-      "unknown"
+      "unknown",
+      "info"
     );
 
     if (status) {
@@ -426,9 +670,17 @@
   }
 
 
-  /* =========================
+  function cleanText(id) {
+    return document
+      .getElementById(id)
+      .textContent
+      .trim();
+  }
+
+
+  /* ======================================
      ENVIRONMENT
-     ========================= */
+     ====================================== */
 
   function testEnvironment() {
 
@@ -441,41 +693,30 @@
       inIframe ? "pass" : "unknown"
     );
 
-    log(
-      "Iframe detected: " +
-      inIframe
+    setResult(
+      "parentResult",
+      window.parent !== window
+        ? "YES"
+        : "NO",
+      window.parent !== window
+        ? "pass"
+        : "unknown"
     );
-
 
     const referrer =
       document.referrer;
 
     setResult(
       "referrerResult",
-      referrer ? "YES" : "NO",
-      referrer ? "pass" : "unknown"
+      referrer || "NONE",
+      referrer ? "info" : "unknown"
     );
-
-    if (referrer) {
-      log(
-        "Referrer: " +
-        referrer
-      );
-    }
-
-
-    updateViewport();
-
-
-    const touch =
-      navigator.maxTouchPoints > 0;
 
     setResult(
       "touchResult",
-      touch ? "YES" : "NO",
-      touch ? "pass" : "unknown"
+      String(navigator.maxTouchPoints),
+      "info"
     );
-
 
     setResult(
       "onlineResult",
@@ -487,42 +728,105 @@
         : "fail"
     );
 
-
-    const hasParent =
-      window.parent !== window;
-
     setResult(
-      "parentResult",
-      hasParent ? "YES" : "NO",
-      hasParent ? "pass" : "unknown"
+      "visibilityResult",
+      document.visibilityState,
+      "info"
     );
+
+    updateViewport();
+
+    log(
+      "Iframe detected: " +
+      inIframe
+    );
+
+    if (referrer) {
+      log(
+        "Referrer: " +
+        referrer
+      );
+    }
   }
 
 
   function updateViewport() {
 
-    const dimensions =
-      window.innerWidth +
-      " × " +
-      window.innerHeight;
-
     setResult(
       "viewportResult",
-      dimensions,
-      "pass"
-    );
-
-    setResult(
-      "widthResult",
-      window.innerWidth + "px",
-      "pass"
+      window.innerWidth +
+      " × " +
+      window.innerHeight,
+      "info"
     );
   }
 
 
-  /* =========================
+  /* ======================================
+     SECURITY / DOCUMENT CONTEXT
+     ====================================== */
+
+  function testDocumentContext() {
+
+    setResult(
+      "protocolResult",
+      location.protocol,
+      location.protocol === "https:"
+        ? "pass"
+        : "unknown"
+    );
+
+    setResult(
+      "originResult",
+      location.origin,
+      "info"
+    );
+
+    setResult(
+      "secureContextResult",
+      window.isSecureContext
+        ? "YES"
+        : "NO",
+      window.isSecureContext
+        ? "pass"
+        : "fail"
+    );
+
+    setResult(
+      "cookiesResult",
+      navigator.cookieEnabled
+        ? "YES"
+        : "NO",
+      navigator.cookieEnabled
+        ? "pass"
+        : "unknown"
+    );
+
+    setResult(
+      "fullscreenApiResult",
+      document.fullscreenEnabled
+        ? "YES"
+        : "NO",
+      document.fullscreenEnabled
+        ? "pass"
+        : "unknown"
+    );
+
+    setResult(
+      "clipboardApiResult",
+      navigator.clipboard
+        ? "YES"
+        : "NO",
+      navigator.clipboard
+        ? "pass"
+        : "unknown"
+    );
+  }
+
+
+  /* ======================================
      STORAGE
-     ========================= */
+     ====================================== */
 
   function testStorage() {
 
@@ -538,21 +842,18 @@
           "wisetailLabTest"
         );
 
+      const passed =
+        value === "working";
+
       setResult(
         "localStorageResult",
-        value === "working"
-          ? "PASS"
-          : "FAIL",
-        value === "working"
-          ? "pass"
-          : "fail"
+        passed ? "PASS" : "FAIL",
+        passed ? "pass" : "fail"
       );
 
       log(
         "localStorage test: " +
-        (value === "working"
-          ? "PASS"
-          : "FAIL")
+        (passed ? "PASS" : "FAIL")
       );
 
     } catch (error) {
@@ -582,21 +883,18 @@
           "wisetailSessionTest"
         );
 
+      const passed =
+        value === "working";
+
       setResult(
         "sessionStorageResult",
-        value === "working"
-          ? "PASS"
-          : "FAIL",
-        value === "working"
-          ? "pass"
-          : "fail"
+        passed ? "PASS" : "FAIL",
+        passed ? "pass" : "fail"
       );
 
       log(
         "sessionStorage test: " +
-        (value === "working"
-          ? "PASS"
-          : "FAIL")
+        (passed ? "PASS" : "FAIL")
       );
 
     } catch (error) {
@@ -632,7 +930,7 @@
 
       setResult(
         "visitResult",
-        visits,
+        String(visits),
         "pass"
       );
 
@@ -645,38 +943,128 @@
 
       setResult(
         "visitResult",
-        "Unavailable",
+        "UNAVAILABLE",
+        "fail"
+      );
+    }
+
+
+    try {
+
+      const saved =
+        localStorage.getItem(
+          "wisetailPersistentValue"
+        );
+
+      setResult(
+        "savedValueStatus",
+        saved ? "FOUND" : "NONE",
+        saved ? "pass" : "unknown"
+      );
+
+    } catch (error) {
+
+      setResult(
+        "savedValueStatus",
+        "UNAVAILABLE",
         "fail"
       );
     }
   }
 
 
-  function testStorageWrite() {
+  function writePersistentValue() {
 
     const value =
-      "Saved at " +
+      "Persistent Test | " +
       new Date().toISOString();
 
     try {
 
       localStorage.setItem(
-        "wisetailManualTest",
+        "wisetailPersistentValue",
         value
       );
 
-      log(
-        "Manual storage value written"
+      setResult(
+        "savedValueStatus",
+        "SAVED",
+        "pass"
       );
 
-      alert(
-        "Saved. Refresh or leave this page and return to test persistence."
+      document.getElementById(
+        "savedValueDisplay"
+      ).textContent = value;
+
+      log(
+        "Persistent test value written: " +
+        value
       );
 
     } catch (error) {
 
+      setResult(
+        "savedValueStatus",
+        "FAILED",
+        "fail"
+      );
+
       log(
-        "Manual storage write failed: " +
+        "Persistent value write failed: " +
+        error.message
+      );
+    }
+  }
+
+
+  function inspectPersistentValue() {
+
+    try {
+
+      const value =
+        localStorage.getItem(
+          "wisetailPersistentValue"
+        );
+
+      if (value) {
+
+        setResult(
+          "savedValueStatus",
+          "FOUND",
+          "pass"
+        );
+
+        document.getElementById(
+          "savedValueDisplay"
+        ).textContent = value;
+
+        log(
+          "Persistent value retrieved: " +
+          value
+        );
+
+      } else {
+
+        setResult(
+          "savedValueStatus",
+          "NONE",
+          "unknown"
+        );
+
+        document.getElementById(
+          "savedValueDisplay"
+        ).textContent =
+          "No persistent test value found.";
+
+        log(
+          "No persistent test value found"
+        );
+      }
+
+    } catch (error) {
+
+      log(
+        "Persistent value inspection failed: " +
         error.message
       );
     }
@@ -685,44 +1073,69 @@
 
   function clearLabStorage() {
 
-    localStorage.removeItem(
-      "wisetailLabTest"
-    );
+    try {
 
-    localStorage.removeItem(
-      "wisetailLabVisits"
-    );
+      localStorage.removeItem(
+        "wisetailLabTest"
+      );
 
-    localStorage.removeItem(
-      "wisetailManualTest"
-    );
+      localStorage.removeItem(
+        "wisetailLabVisits"
+      );
 
-    sessionStorage.removeItem(
-      "wisetailSessionTest"
-    );
+      localStorage.removeItem(
+        "wisetailManualTest"
+      );
 
-    log(
-      "Lab storage cleared"
-    );
+      localStorage.removeItem(
+        "wisetailPersistentValue"
+      );
 
-    setResult(
-      "visitResult",
-      "Cleared",
-      "unknown"
-    );
+      sessionStorage.removeItem(
+        "wisetailSessionTest"
+      );
+
+      setResult(
+        "visitResult",
+        "CLEARED",
+        "unknown"
+      );
+
+      setResult(
+        "savedValueStatus",
+        "NONE",
+        "unknown"
+      );
+
+      document.getElementById(
+        "savedValueDisplay"
+      ).textContent =
+        "Lab storage cleared.";
+
+      log(
+        "Lab storage cleared"
+      );
+
+    } catch (error) {
+
+      log(
+        "Storage clear failed: " +
+        error.message
+      );
+    }
   }
 
 
-  /* =========================
+  /* ======================================
      INTERACTION
-     ========================= */
+     ====================================== */
 
   function testInteraction() {
 
     const input =
       document.getElementById(
         "testInput"
-      ).value;
+      ).value.trim();
 
     const selection =
       document.getElementById(
@@ -744,7 +1157,6 @@
       return;
     }
 
-
     setResult(
       "interactionResult",
       "PASS",
@@ -757,16 +1169,61 @@
   }
 
 
-  /* =========================
+  function testDynamicDOM() {
+
+    const target =
+      document.getElementById(
+        "dynamicTarget"
+      );
+
+    const marker =
+      "Dynamic render " +
+      new Date().toLocaleTimeString();
+
+    target.textContent =
+      marker;
+
+    const passed =
+      target.textContent === marker;
+
+    setResult(
+      "dynamicResult",
+      passed ? "PASS" : "FAIL",
+      passed ? "pass" : "fail"
+    );
+
+    log(
+      "Dynamic DOM rendering: " +
+      (passed ? "PASS" : "FAIL")
+    );
+  }
+
+
+  /* ======================================
      CLIPBOARD
-     ========================= */
+     ====================================== */
 
   async function testClipboard() {
+
+    if (!navigator.clipboard) {
+
+      setResult(
+        "clipboardResult",
+        "UNSUPPORTED",
+        "unknown"
+      );
+
+      log(
+        "Clipboard API not exposed"
+      );
+
+      return;
+    }
 
     try {
 
       await navigator.clipboard.writeText(
-        "Wisetail Capability Lab clipboard test"
+        "Wisetail Test Lab clipboard test"
       );
 
       setResult(
@@ -795,19 +1252,28 @@
   }
 
 
-  /* =========================
+  /* ======================================
      FULLSCREEN
-     ========================= */
+     ====================================== */
 
   async function testFullscreen() {
 
-    try {
+    if (!document.fullscreenEnabled) {
 
-      if (!document.fullscreenEnabled) {
-        throw new Error(
-          "Fullscreen API unavailable"
-        );
-      }
+      setResult(
+        "fullscreenResult",
+        "UNAVAILABLE",
+        "unknown"
+      );
+
+      log(
+        "Fullscreen API unavailable in current context"
+      );
+
+      return;
+    }
+
+    try {
 
       await document.documentElement
         .requestFullscreen();
@@ -831,16 +1297,16 @@
       );
 
       log(
-        "Fullscreen blocked: " +
+        "Fullscreen request failed: " +
         error.message
       );
     }
   }
 
 
-  /* =========================
+  /* ======================================
      DOWNLOAD
-     ========================= */
+     ====================================== */
 
   function testDownload() {
 
@@ -848,8 +1314,14 @@
 
       const blob =
         new Blob(
-          ["Wisetail Capability Lab test"],
-          { type: "text/plain" }
+          [
+            "Wisetail Test Lab\n" +
+            "Synthetic download test\n" +
+            new Date().toISOString()
+          ],
+          {
+            type: "text/plain"
+          }
         );
 
       const url =
@@ -859,15 +1331,22 @@
         document.createElement("a");
 
       link.href = url;
+
       link.download =
-        "wisetail-test.txt";
+        "wisetail-test-lab.txt";
 
       document.body.appendChild(link);
 
       link.click();
+
       link.remove();
 
-      URL.revokeObjectURL(url);
+      setTimeout(
+        function() {
+          URL.revokeObjectURL(url);
+        },
+        1000
+      );
 
       setResult(
         "downloadResult",
@@ -876,7 +1355,7 @@
       );
 
       log(
-        "Download triggered"
+        "Download triggered — visual confirmation required"
       );
 
     } catch (error) {
@@ -895,18 +1374,135 @@
   }
 
 
-  /* =========================
+  /* ======================================
+     WINDOWS / LINKS
+     ====================================== */
+
+  function testWindowOpen() {
+
+    try {
+
+      const newWindow =
+        window.open(
+          "https://example.com/",
+          "_blank"
+        );
+
+      if (newWindow) {
+
+        setResult(
+          "windowResult",
+          "OBJECT RETURNED",
+          "unknown"
+        );
+
+        log(
+          "window.open returned a window object — verify visible tab manually"
+        );
+
+      } else {
+
+        setResult(
+          "windowResult",
+          "BLOCKED",
+          "fail"
+        );
+
+        log(
+          "window.open returned null"
+        );
+      }
+
+    } catch (error) {
+
+      setResult(
+        "windowResult",
+        "FAILED",
+        "fail"
+      );
+
+      log(
+        "window.open failed: " +
+        error.message
+      );
+    }
+  }
+
+
+  function testExternalAnchor() {
+
+    try {
+
+      const link =
+        document.createElement("a");
+
+      link.href =
+        "https://example.com/";
+
+      link.target =
+        "_blank";
+
+      link.rel =
+        "noopener noreferrer";
+
+      document.body.appendChild(link);
+
+      link.click();
+
+      link.remove();
+
+      setResult(
+        "anchorResult",
+        "TRIGGERED",
+        "unknown"
+      );
+
+      log(
+        "External target=_blank anchor triggered — verify visible tab manually"
+      );
+
+    } catch (error) {
+
+      setResult(
+        "anchorResult",
+        "FAILED",
+        "fail"
+      );
+
+      log(
+        "External anchor failed: " +
+        error.message
+      );
+    }
+  }
+
+
+  /* ======================================
      POSTMESSAGE
-     ========================= */
+     ====================================== */
 
   function testParentMessage() {
+
+    parentResponseReceived = false;
+
+    setResult(
+      "messageResponseResult",
+      "WAITING",
+      "unknown"
+    );
+
+    setResult(
+      "messageOriginResult",
+      "None",
+      "unknown"
+    );
 
     try {
 
       window.parent.postMessage(
         {
           source:
-            "wisetail-capability-lab",
+            "wisetail-test-lab",
 
           type:
             "CAPABILITY_TEST",
@@ -925,6 +1521,27 @@
 
       log(
         "postMessage sent to parent"
+      );
+
+
+      setTimeout(
+        function() {
+
+          if (!parentResponseReceived) {
+
+            setResult(
+              "messageResponseResult",
+              "NO RESPONSE",
+              "unknown"
+            );
+
+            log(
+              "No parent postMessage response after 5 seconds"
+            );
+          }
+
+        },
+        5000
       );
 
     } catch (error) {
@@ -947,64 +1564,361 @@
     "message",
     function(event) {
 
+      /*
+        Ignore messages originating from this document itself.
+      */
+
+      if (event.source === window) {
+        return;
+      }
+
+      parentResponseReceived = true;
+
       setResult(
         "messageResponseResult",
         "RECEIVED",
         "pass"
       );
 
+      setResult(
+        "messageOriginResult",
+        event.origin || "Unknown",
+        "info"
+      );
+
       log(
         "Message received from origin: " +
-        event.origin
+        (event.origin || "Unknown")
       );
     }
   );
 
 
-  /* =========================
-     NEW WINDOW
-     ========================= */
+  /* ======================================
+     NETWORK
+     ====================================== */
 
-  function testNewWindow() {
+  async function testFetchGET() {
 
-    const newWindow =
-      window.open(
-        "about:blank",
-        "_blank"
-      );
+    setResult(
+      "getResult",
+      "TESTING...",
+      "unknown"
+    );
 
-    if (newWindow) {
+    setResult(
+      "getStatusResult",
+      "—",
+      "unknown"
+    );
+
+    try {
+
+      const response =
+        await fetch(
+          "https://jsonplaceholder.typicode.com/todos/1",
+          {
+            method: "GET",
+            cache: "no-store"
+          }
+        );
 
       setResult(
-        "windowResult",
-        "PASS",
-        "pass"
+        "getStatusResult",
+        String(response.status),
+        response.ok ? "pass" : "fail"
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          "HTTP " + response.status
+        );
+      }
+
+      const data =
+        await response.json();
+
+      const passed =
+        data &&
+        data.id === 1;
+
+      setResult(
+        "getResult",
+        passed ? "PASS" : "UNEXPECTED RESPONSE",
+        passed ? "pass" : "unknown"
       );
 
       log(
-        "New window/tab allowed"
+        "External GET succeeded: HTTP " +
+        response.status
       );
 
-      newWindow.close();
-
-    } else {
+    } catch (error) {
 
       setResult(
-        "windowResult",
-        "BLOCKED",
+        "getResult",
+        "FAILED / BLOCKED",
         "fail"
       );
 
       log(
-        "New window/tab blocked"
+        "External GET failed: " +
+        error.message
       );
     }
   }
 
 
-  /* =========================
+  async function testFetchPOST() {
+
+    setResult(
+      "postResult",
+      "TESTING...",
+      "unknown"
+    );
+
+    setResult(
+      "postStatusResult",
+      "—",
+      "unknown"
+    );
+
+    try {
+
+      const payload = {
+        test:
+          "wisetail-capability-lab",
+
+        synthetic:
+          true,
+
+        value:
+          12345
+      };
+
+      const response =
+        await fetch(
+          "https://jsonplaceholder.typicode.com/posts",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body:
+              JSON.stringify(payload)
+          }
+        );
+
+      setResult(
+        "postStatusResult",
+        String(response.status),
+        response.ok ? "pass" : "fail"
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          "HTTP " + response.status
+        );
+      }
+
+      const data =
+        await response.json();
+
+      const passed =
+        data &&
+        data.test ===
+          "wisetail-capability-lab";
+
+      setResult(
+        "postResult",
+        passed ? "PASS" : "UNEXPECTED RESPONSE",
+        passed ? "pass" : "unknown"
+      );
+
+      log(
+        "External POST succeeded: HTTP " +
+        response.status
+      );
+
+    } catch (error) {
+
+      setResult(
+        "postResult",
+        "FAILED / BLOCKED",
+        "fail"
+      );
+
+      log(
+        "External POST failed: " +
+        error.message
+      );
+    }
+  }
+
+
+  /* ======================================
+     EXTERNAL RESOURCE LOADING
+     ====================================== */
+
+  function testExternalImage() {
+
+    setResult(
+      "imageResult",
+      "TESTING...",
+      "unknown"
+    );
+
+    const image =
+      new Image();
+
+    image.onload =
+      function() {
+
+        setResult(
+          "imageResult",
+          "PASS",
+          "pass"
+        );
+
+        log(
+          "External image loaded successfully"
+        );
+      };
+
+    image.onerror =
+      function() {
+
+        setResult(
+          "imageResult",
+          "FAILED / BLOCKED",
+          "fail"
+        );
+
+        log(
+          "External image failed to load"
+        );
+      };
+
+    image.src =
+      "https://dummyjson.com/icon/1/64";
+  }
+
+
+  function testExternalScript() {
+
+    setResult(
+      "scriptResult",
+      "TESTING...",
+      "unknown"
+    );
+
+    const script =
+      document.createElement("script");
+
+    script.src =
+      "https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js";
+
+    script.onload =
+      function() {
+
+        if (typeof window.dayjs === "function") {
+
+          setResult(
+            "scriptResult",
+            "PASS",
+            "pass"
+          );
+
+          log(
+            "External JavaScript library loaded and executed"
+          );
+
+        } else {
+
+          setResult(
+            "scriptResult",
+            "LOADED / NOT EXECUTED",
+            "unknown"
+          );
+
+          log(
+            "External script load event fired but expected global was unavailable"
+          );
+        }
+      };
+
+    script.onerror =
+      function() {
+
+        setResult(
+          "scriptResult",
+          "FAILED / BLOCKED",
+          "fail"
+        );
+
+        log(
+          "External script failed to load"
+        );
+      };
+
+    document.head.appendChild(
+      script
+    );
+  }
+
+
+  /* ======================================
+     INSTRUMENTATION
+     ====================================== */
+
+  function generateSyntheticEvent() {
+
+    log(
+      "Synthetic analytics event generated"
+    );
+  }
+
+
+  document.addEventListener(
+    "click",
+    function(event) {
+
+      if (
+        event.target &&
+        event.target.tagName === "BUTTON"
+      ) {
+
+        setResult(
+          "buttonEventResult",
+          "CAPTURED",
+          "pass"
+        );
+      }
+    }
+  );
+
+
+  document.getElementById(
+    "testInput"
+  ).addEventListener(
+    "input",
+    function() {
+
+      setResult(
+        "inputEventResult",
+        "CAPTURED",
+        "pass"
+      );
+    }
+  );
+
+
+  /* ======================================
      PAGE EVENTS
-     ========================= */
+     ====================================== */
 
   document.addEventListener(
     "visibilitychange",
@@ -1013,6 +1927,12 @@
       setResult(
         "visibilityResult",
         document.visibilityState,
+        "info"
+      );
+
+      setResult(
+        "visibilityEventResult",
+        "CAPTURED",
         "pass"
       );
 
@@ -1074,16 +1994,15 @@
   );
 
 
-  /* =========================
+  /* ======================================
      REPORT
-     ========================= */
+     ====================================== */
 
-  async function copyReport() {
+  function buildReport() {
 
-    const report =
-`
-WISETAIL CAPABILITY LAB
-=======================
+    return `
+WISETAIL TEST LAB
+=================
 
 Timestamp:
 ${new Date().toISOString()}
@@ -1094,56 +2013,85 @@ ${location.href}
 Referrer:
 ${document.referrer || "None"}
 
-Inside iframe:
-${window.self !== window.top}
+ENVIRONMENT
+-----------
+Inside iframe: ${window.self !== window.top}
+Parent detected: ${cleanText("parentResult")}
+Viewport: ${window.innerWidth} × ${window.innerHeight}
+Touch points: ${navigator.maxTouchPoints}
+Online: ${navigator.onLine}
+Visibility: ${document.visibilityState}
 
-Viewport:
-${window.innerWidth} × ${window.innerHeight}
+STORAGE
+-------
+localStorage: ${cleanText("localStorageResult")}
+sessionStorage: ${cleanText("sessionStorageResult")}
+Visit count: ${cleanText("visitResult")}
+Saved value status: ${cleanText("savedValueStatus")}
+Saved value:
+${localStorage.getItem("wisetailPersistentValue") || "None"}
 
-Touch points:
-${navigator.maxTouchPoints}
+INTERACTION
+-----------
+Form interaction: ${cleanText("interactionResult")}
+Dynamic rendering: ${cleanText("dynamicResult")}
 
-Online:
-${navigator.onLine}
+BROWSER / IFRAME
+----------------
+Clipboard: ${cleanText("clipboardResult")}
+Fullscreen: ${cleanText("fullscreenResult")}
+Download: ${cleanText("downloadResult")}
 
-localStorage:
-${document.getElementById("localStorageResult").textContent}
+LINKS / WINDOWS
+---------------
+window.open(): ${cleanText("windowResult")}
+External anchor: ${cleanText("anchorResult")}
 
-sessionStorage:
-${document.getElementById("sessionStorageResult").textContent}
+PARENT COMMUNICATION
+--------------------
+postMessage: ${cleanText("messageSentResult")}
+Parent response: ${cleanText("messageResponseResult")}
+Response origin: ${cleanText("messageOriginResult")}
 
-Visit count:
-${document.getElementById("visitResult").textContent}
+NETWORK
+-------
+External GET: ${cleanText("getResult")}
+GET HTTP status: ${cleanText("getStatusResult")}
+External POST: ${cleanText("postResult")}
+POST HTTP status: ${cleanText("postStatusResult")}
 
-Form interaction:
-${document.getElementById("interactionResult").textContent}
+EXTERNAL RESOURCES
+------------------
+External image: ${cleanText("imageResult")}
+External script: ${cleanText("scriptResult")}
 
-Clipboard:
-${document.getElementById("clipboardResult").textContent}
+INSTRUMENTATION
+---------------
+Events captured: ${cleanText("eventCountResult")}
+Button events: ${cleanText("buttonEventResult")}
+Input events: ${cleanText("inputEventResult")}
+Visibility events: ${cleanText("visibilityEventResult")}
 
-Fullscreen:
-${document.getElementById("fullscreenResult").textContent}
-
-Download:
-${document.getElementById("downloadResult").textContent}
-
-Parent detected:
-${document.getElementById("parentResult").textContent}
-
-postMessage:
-${document.getElementById("messageSentResult").textContent}
-
-Parent response:
-${document.getElementById("messageResponseResult").textContent}
-
-New window:
-${document.getElementById("windowResult").textContent}
+DOCUMENT / SECURITY CONTEXT
+---------------------------
+Protocol: ${cleanText("protocolResult")}
+Origin: ${cleanText("originResult")}
+Secure context: ${cleanText("secureContextResult")}
+Cookies enabled: ${cleanText("cookiesResult")}
+Fullscreen API exposed: ${cleanText("fullscreenApiResult")}
+Clipboard API exposed: ${cleanText("clipboardApiResult")}
 
 EVENT LOG
-=========
-
+---------
 ${events.join("\n")}
 `;
+  }
+
+
+  async function copyReport() {
+
+    const report =
+      buildReport();
 
     try {
 
@@ -1155,14 +2103,13 @@ ${events.join("\n")}
       );
 
       alert(
-        "Report copied. Paste it into ChatGPT."
+        "Report copied."
       );
 
     } catch (error) {
 
       log(
-        "Report copy failed: " +
-        error.message
+        "Report clipboard copy unavailable; manual copy fallback opened"
       );
 
       prompt(
@@ -1181,27 +2128,27 @@ ${events.join("\n")}
       "eventLog"
     ).textContent = "";
 
+    document.getElementById(
+      "eventCountResult"
+    ).textContent = "0";
+
     log(
       "Event log cleared"
     );
   }
 
 
-  /* =========================
+  /* ======================================
      INITIALIZE
-     ========================= */
-
-  setResult(
-    "visibilityResult",
-    document.visibilityState,
-    "pass"
-  );
+     ====================================== */
 
   log(
-    "Capability Lab initialized"
+    "Wisetail Test Lab initialized"
   );
 
   testEnvironment();
+
+  testDocumentContext();
 
   testStorage();
 
